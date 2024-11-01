@@ -9,6 +9,8 @@
   status = 200
   force = true
 
-
 [functions]
   directory = "netlify/functions"
+
+  [dev]
+  autoLaunch = false

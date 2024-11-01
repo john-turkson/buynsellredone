@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "../styles/globals.css";
-import { Provider } from "@/components/chakra-ui/provider"
+import { Provider } from "@/components/chakra-ui/provider";
+import Navbar from "@/components/application/Navbar"; // Adjust the import path based on your folder structure
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,7 +25,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Provider>{children}</Provider>
+        <Provider>
+          <header>
+            <Navbar />
+          </header>
+
+          {children}
+        </Provider>
       </body>
     </html>
   );
