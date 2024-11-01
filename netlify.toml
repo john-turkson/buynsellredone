@@ -1,2 +1,11 @@
 [build]
   functions = "netlify/functions"
+  command = "npm run build"
+  publish = ".next"
+
+[functions]
+  directory = "netlify/functions"
+
+[dev]
+  framework = "#auto"
+  targetPort = 3000
