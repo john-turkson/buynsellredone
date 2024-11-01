@@ -3,9 +3,12 @@
   command = "npm run build"
   publish = ".next"
 
+[[redirects]]
+  from = "/:function"
+  to = "/.netlify/functions/:function"
+  status = 200
+  force = true
+
+
 [functions]
   directory = "netlify/functions"
-
-[dev]
-  framework = "#auto"
-  targetPort = 3000

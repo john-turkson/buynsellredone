@@ -6,7 +6,7 @@ const { MONGODB_URI } = process.env;
 exports.handler = async (event, context) => {
   try {
     // Initiate MongoDB Connection using mongoose
-    await mongoose.connect(MONGODB_URI, { dbName: 'Main', useNewUrlParser: true, });
+    await mongoose.connect(MONGODB_URI, { dbName: 'Main', });
     console.log("Connected to MongoDB!");
 
     // Return a successful response
