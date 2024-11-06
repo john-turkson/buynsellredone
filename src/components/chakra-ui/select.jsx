@@ -76,7 +76,16 @@ export const SelectRoot = forwardRef(function SelectRoot(props, ref) {
       {...props}
       ref={ref}
       positioning={{ sameWidth: true, ...props.positioning }}
-    />
+    >
+      {props.asChild ? (
+        props.children
+      ) : (
+        <>
+          <ChakraSelect.HiddenSelect />
+          {props.children}
+        </>
+      )}
+    </ChakraSelect.Root>
   )
 })
 
