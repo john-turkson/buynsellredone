@@ -26,11 +26,11 @@ function _optionalChain(ops) {
   }
   return value
 }
-import { Slider as ChakraSlider } from '@chakra-ui/react'
+import { Slider as ChakraSlider, HStack } from '@chakra-ui/react'
 import { forwardRef } from 'react'
 
 export const Slider = forwardRef(function Slider(props, ref) {
-  const { marks: marksProp, label, ...rest } = props
+  const { marks: marksProp, label, showValue, ...rest } = props
   const value = _nullishCoalesce(props.defaultValue, () => props.value)
 
   const marks = _optionalChain([
@@ -55,8 +55,14 @@ export const Slider = forwardRef(function Slider(props, ref) {
 
   return (
     <ChakraSlider.Root ref={ref} thumbAlignment='center' {...rest}>
-      {label && (
+      {label && !showValue && (
         <ChakraSlider.Label fontWeight='medium'>{label}</ChakraSlider.Label>
+      )}
+      {label && showValue && (
+        <HStack justify='space-between'>
+          <ChakraSlider.Label fontWeight='medium'>{label}</ChakraSlider.Label>
+          <ChakraSlider.ValueText />
+        </HStack>
       )}
       <ChakraSlider.Control mb={hasMarkLabel ? '4' : undefined}>
         <ChakraSlider.Track>
