@@ -9,3 +9,4 @@
 [dev]
   framework = "#auto"
   targetPort = 3000
+  autoLaunch = false
