@@ -21,7 +21,7 @@ export default function SignIn() {
             Sign in to your account
           </Heading>
 
-          <Box rounded={"lg"} boxShadow={"lg"} p={8}>
+          <Box rounded={"lg"} p={8}>
 
             <Fieldset.Content>
               <Field label="Email Address">
@@ -38,7 +38,6 @@ export default function SignIn() {
                   name="password"
                   type="password"
                   placeholder="Enter your Password"
-                  className="border border-gray-300 px-2"
                 />
               </Field>
               

@@ -1,14 +1,17 @@
-/** @type {import('tailwindcss').Config} */
+import { parkwindPlugin } from "@park-ui/tailwind-plugin"
 
-export const content = [
-  "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-  "./components/**/*.{js,ts,jsx,tsx,mdx}",
+const config = {
+  content: ["./src/**/*.{astro,html,js,jsx,svelte,ts,tsx,vue}"],
+  theme: {
+    extend: {}
+  },
+  plugins: [parkwindPlugin],
+  parkUI: {
+    accentColor: "bronze",
+    grayColor: "sand",
+    borderRadius: "md"
+  },
+  darkMode: ["class"]
+}
 
-  // Or if using `src` directory:
-  "./src/**/*.{js,ts,jsx,tsx,mdx}",
-];
-export const theme = {
-  extend: {},
-};
-export const plugins = [];
+export default config
