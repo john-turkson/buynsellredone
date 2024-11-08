@@ -1,8 +1,8 @@
 import localFont from "next/font/local";
 import "../styles/globals.css";
-import { Provider } from "@/components/chakra-ui/provider";
-import Navbar from "@/components/wrapper/Navbar";
-import Footer from "@/components/wrapper/Footer";
+import Navbar from "@/components/application-wrapper/Navbar";
+import Footer from "@/components/application-wrapper/Footer";
+import Provider from "./provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,9 +23,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`} >
         <Provider>
           <Navbar />
           <main className="flex-grow">{children}</main>

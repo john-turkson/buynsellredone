@@ -1,7 +1,12 @@
-import React from 'react'
+import React from "react";
+import RegisterForm from "./_components/RegisterForm";
 
 export default function SignUp() {
   return (
-    <div>SignUp</div>
-  )
+    <>
+      <div className="flex items-center justify-center min-h-screen">
+        <RegisterForm />
+      </div>
+    </>
+  );
 }

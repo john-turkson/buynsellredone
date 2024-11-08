@@ -1,17 +1,19 @@
-import { parkwindPlugin } from "@park-ui/tailwind-plugin"
+/** @type {import('tailwindcss').Config} */
 
-const config = {
-  content: ["./src/**/*.{astro,html,js,jsx,svelte,ts,tsx,vue}"],
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    './node_modules/preline/preline.js',
+ 
+    // Or if using `src` directory:
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   theme: {
-    extend: {}
+    extend: {},
   },
-  plugins: [parkwindPlugin],
-  parkUI: {
-    accentColor: "bronze",
-    grayColor: "sand",
-    borderRadius: "md"
-  },
-  darkMode: ["class"]
-}
+  plugins: [ require('preline/plugin'), require('@tailwindcss/forms'),],
 
-export default config
+  darkMode: 'class',
+}
