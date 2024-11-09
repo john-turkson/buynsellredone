@@ -1,8 +1,31 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
 import FormField from "./FormField";
+import FileInput from "./FileInput";
+import { useFormik } from "formik";
+import axios from "axios";
+import { registrationScehma } from "@/utils/yup-schemas";
 
 export default function RegisterForm() {
+  const onSubmit = async (values, actions) => {
+    console.log(values);
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      phoneNumber: "",
+      profilePicture: "",
+    },
+    validationSchema: registrationScehma,
+    onSubmit: onSubmit,
+  });
+
   return (
     <>
       <div className="w-full max-w-sm mt-7 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-neutral-900 dark:border-neutral-700">
@@ -28,45 +51,42 @@ export default function RegisterForm() {
             </div>
 
             {/* <!-- Form --> */}
-            <form>
+            <form onSubmit={formik.handleSubmit}>
               <div className="grid gap-y-4 mt-2">
-                
+
                 {/* <!-- Username Form Group --> */}
                 <div>
                   <FormField
                     label={"Username"}
-                    type="text"
-                    id={"text"}
                     name={"username"}
-                    placeholder="Enter username"
-                    isRequired={true}
-                  />
-                </div>
-                {/* <!-- End Form Group --> */}
-                
-                {/* <!-- Email Form Group --> */}
-                <div>
-                  <FormField
-                    label={"Email"}
+                    id={"username"}
                     type="text"
-                    id={"text"}
-                    name={"email"}
-                    placeholder="me@example.com"
-                    isRequired={true}
+                    placeholder="Enter a Username"
+                    touched={formik.touched.username || false} // fallback for untouched state
+                    errors={formik.errors.username || ""}
+                    value={formik.values.username} // Pass the value to make it controlled
+                    onChange={formik.handleChange} // Pass onChange to handle updates
+                    onBlur={formik.handleBlur}
+                    validationMessage="Please enter a valid username"
                   />
                 </div>
                 {/* <!-- End Form Group --> */}
 
-                {/* <!-- Phone Number Form Group --> */}
+
+                {/* <!-- Email Form Group --> */}
                 <div>
                   <FormField
-                    label={"Phone Number"}
-                    type="tel"
-                    id={"phoneNumber"}
-                    name={"phoneNumber"}
-                    pattern="[0-9]*"
-                    placeholder="i.e. (123) 456-7890"
-                    isRequired={true}
+                    label={"Email"}
+                    name={"email"}
+                    id={"email"}
+                    type="text"
+                    placeholder="Enter an email"
+                    touched={formik.touched.email || false} // fallback for untouched state
+                    errors={formik.errors.email || ""}
+                    value={formik.values.email} // Pass the value to make it controlled
+                    onChange={formik.handleChange} // Pass onChange to handle updates
+                    onBlur={formik.handleBlur}
+                    validationMessage="Please enter a valid Email"
                   />
                 </div>
                 {/* <!-- End Form Group --> */}
@@ -75,11 +95,16 @@ export default function RegisterForm() {
                 <div>
                   <FormField
                     label={"Password"}
-                    type="password"
-                    id={"password"}
                     name={"password"}
+                    id={"password"}
+                    type="password"
                     placeholder="Enter a Password"
-                    isRequired={true}
+                    touched={formik.touched.password || false} // fallback for untouched state
+                    errors={formik.errors.password || ""}
+                    value={formik.values.password} // Pass the value to make it controlled
+                    onChange={formik.handleChange} // Pass onChange to handle updates
+                    onBlur={formik.handleBlur}
+                    validationMessage={formik.errors.password}
                   />
                 </div>
                 {/* <!-- End Form Group --> */}
@@ -88,11 +113,27 @@ export default function RegisterForm() {
                 <div>
                   <FormField
                     label={"Confirm Password"}
-                    type="password"
-                    id={"confirmPassword"}
                     name={"confirmPassword"}
-                    placeholder="Re-enter your Password"
-                    isRequired={true}
+                    id={"confirmPassword"}
+                    type="password"
+                    placeholder="Re-enter a Password"
+                    touched={formik.touched.confirmPassword || false} // fallback for untouched state
+                    errors={formik.errors.confirmPassword || ""}
+                    value={formik.values.confirmPassword} // Pass the value to make it controlled
+                    onChange={formik.handleChange} // Pass onChange to handle updates
+                    onBlur={formik.handleBlur}
+                    validationMessage={formik.errors.confirmPassword}
+                  />
+                </div>
+                {/* <!-- End Form Group --> */}
+
+                {/* <!-- Profile Picture Form Group --> */}
+                <div>
+                  <FileInput
+                    label={"Profile Picture (Optional)"}
+                    name={"profilePicture"}
+                    id={"profilePicture"}
+                    onChange={(e) => formik.setFieldValue("profilePicture", e.currentTarget.files[0])} // Pass onChange to handle updates
                   />
                 </div>
                 {/* <!-- End Form Group --> */}
