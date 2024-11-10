@@ -20,7 +20,7 @@ export default function FormField({
     <div className="max-w-sm space-y-4">
       <div>
         <label
-          htmlFor="hs-validation-name-error"
+          htmlFor={id} // Set to match the input `id`
           className="block text-sm font-small mb-2 dark:text-white"
         >
           {label}
@@ -30,11 +30,11 @@ export default function FormField({
             type={type}
             id={id}
             name={name}
-            className={`py-3 px-4 block w-full ${
+            className={`py-3 px-4 block w-full rounded-lg text-sm ${
               touched && errors
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "border-gray-200"
-            } rounded-lg text-sm focus:border-blue-500 focus:blue-red-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400`}
+                : "border-gray-200 focus:border-blue-500"
+            } dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400`}
             value={value} // Use the controlled value from Formik
             onChange={onChange} // Formik handles onChange
             onBlur={onBlur}

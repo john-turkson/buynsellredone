@@ -1,12 +1,17 @@
 // netlify/functions/mongodb-connect.js
-const mongoose = require("mongoose");
+
+require('dotenv').config();
+
+
+import { connect } from "mongoose";
 const { MONGODB_URI } = process.env;
 
+
 // Define and export the handler function
-exports.handler = async (event, context) => {
+export async function handler() {
   try {
     // Initiate MongoDB Connection using mongoose
-    await mongoose.connect(MONGODB_URI, { dbName: 'Main', });
+    await connect(MONGODB_URI, { dbName: 'Main', });
     console.log("Connected to MongoDB!");
 
     // Return a successful response
@@ -21,4 +26,4 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ message: 'Failed to connect to MongoDB', error: error.message })
     };
   }
-};
+}

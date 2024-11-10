@@ -1,6 +1,6 @@
-import { genSalt, hash, compare } from "bcrypt";
+import { genSalt, hash, compare } from "bcryptjs";
 
-async function hashPassword(password) {
+export async function hashPassword(password) {
 	try {
 		// Generate a salt
 		const salt = await genSalt(10);
@@ -13,7 +13,7 @@ async function hashPassword(password) {
 	}
 }
 
-async function comparePasswords(plainPassword, hashedPassword) {
+export async function comparePasswords(plainPassword, hashedPassword) {
 	try {
 		// Compare the plain password with the hashed password
 		const match = await compare(plainPassword, hashedPassword);
@@ -22,5 +22,3 @@ async function comparePasswords(plainPassword, hashedPassword) {
 		throw error;
 	}
 }
-
-module.exports = { hashPassword, comparePasswords };

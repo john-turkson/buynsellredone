@@ -1,16 +1,77 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
-import FormField from "./FormField";
+import React, { useState } from "react";
+import FormField from "../../../../components/application/FormField";
 import FileInput from "./FileInput";
 import { useFormik } from "formik";
 import axios from "axios";
 import { registrationScehma } from "@/utils/yup-schemas";
+import SuccessAlert from "@/components/application/SuccessAlert";
 
 export default function RegisterForm() {
+  const [alertVisible, setAlertVisible] = useState(false);
+
+  const uploadProfilePictureToCloudinary = async(image, username) => {
+    const imageFormData = new FormData();
+  
+    // Append the necessary data for Cloudinary upload
+    imageFormData.append("file", image);
+    imageFormData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET); 
+    imageFormData.append("folder", `Users/${username}/Images`); 
+    imageFormData.append("public_id", `profilePicture`); 
+  
+    try {
+      // Upload the image to Cloudinary
+      const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL_ENDPOINT, {
+        method: "POST",
+        body: imageFormData,
+      });
+  
+      const data = await response.json();
+  
+      // Return the secure URL of the uploaded image
+      return data.secure_url;
+    } catch (error) {
+      console.error("Upload failed:", error);
+      return null;
+    }
+  }
+  
+
   const onSubmit = async (values, actions) => {
-    console.log(values);
+    console.log("Form Submitted", values);
+
+    const userName = values.username;
+
+    const imageResponse = await uploadProfilePictureToCloudinary(values.profilePicture, userName);
+    console.log(imageResponse);
+
+    const profileData = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      phone: values.phoneNumber,
+      profilePicture: imageResponse,
+    };
+
+    //Send User Data to MongoDB
+    try {
+      const response = await axios.post("/api/register-user", profileData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+     
+      if (response.status === 201) {
+        setAlertVisible(true);
+      } 
+
+    } catch (error) {
+      console.error("Error creating user:", error.message);
+    }
+    
+    actions.reset();
   };
 
   const formik = useFormik({
@@ -53,7 +114,6 @@ export default function RegisterForm() {
             {/* <!-- Form --> */}
             <form onSubmit={formik.handleSubmit}>
               <div className="grid gap-y-4 mt-2">
-
                 {/* <!-- Username Form Group --> */}
                 <div>
                   <FormField
@@ -67,11 +127,10 @@ export default function RegisterForm() {
                     value={formik.values.username} // Pass the value to make it controlled
                     onChange={formik.handleChange} // Pass onChange to handle updates
                     onBlur={formik.handleBlur}
-                    validationMessage="Please enter a valid username"
+                    validationMessage={formik.errors.username}
                   />
                 </div>
                 {/* <!-- End Form Group --> */}
-
 
                 {/* <!-- Email Form Group --> */}
                 <div>
@@ -86,7 +145,25 @@ export default function RegisterForm() {
                     value={formik.values.email} // Pass the value to make it controlled
                     onChange={formik.handleChange} // Pass onChange to handle updates
                     onBlur={formik.handleBlur}
-                    validationMessage="Please enter a valid Email"
+                    validationMessage={formik.errors.email}
+                  />
+                </div>
+                {/* <!-- End Form Group --> */}
+
+                {/* <!-- Phone Number Form Group --> */}
+                <div>
+                  <FormField
+                    label={"Phone Number"}
+                    name={"phoneNumber"}
+                    id={"phoneNumber"}
+                    type="tel"
+                    placeholder="Enter a Phone Number"
+                    touched={formik.touched.phoneNumber || false} // fallback for untouched state
+                    errors={formik.errors.phoneNumber || ""}
+                    value={formik.values.phoneNumber} // Pass the value to make it controlled
+                    onChange={formik.handleChange} // Pass onChange to handle updates
+                    onBlur={formik.handleBlur}
+                    validationMessage={formik.errors.phoneNumber}
                   />
                 </div>
                 {/* <!-- End Form Group --> */}
@@ -104,7 +181,12 @@ export default function RegisterForm() {
                     value={formik.values.password} // Pass the value to make it controlled
                     onChange={formik.handleChange} // Pass onChange to handle updates
                     onBlur={formik.handleBlur}
-                    validationMessage={formik.errors.password}
+                    validationMessage={
+                      formik.errors.password
+                        ? formik.errors.password.charAt(0).toUpperCase() +
+                          formik.errors.password.slice(1)
+                        : ""
+                    }
                   />
                 </div>
                 {/* <!-- End Form Group --> */}
@@ -133,7 +215,12 @@ export default function RegisterForm() {
                     label={"Profile Picture (Optional)"}
                     name={"profilePicture"}
                     id={"profilePicture"}
-                    onChange={(e) => formik.setFieldValue("profilePicture", e.currentTarget.files[0])} // Pass onChange to handle updates
+                    onChange={(e) =>
+                      formik.setFieldValue(
+                        "profilePicture",
+                        e.currentTarget.files[0]
+                      )
+                    } // Pass onChange to handle updates
                   />
                 </div>
                 {/* <!-- End Form Group --> */}
@@ -150,6 +237,11 @@ export default function RegisterForm() {
           </div>
         </div>
       </div>
+
+      <SuccessAlert
+        message="Account created successfully!"
+        hidden={!alertVisible}
+      />
     </>
   );
 }
