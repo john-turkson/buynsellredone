@@ -1,9 +1,8 @@
 import localFont from "next/font/local";
 import "../styles/globals.css";
-import Navbar from "@/components/application-wrapper/Navbar";
 import Footer from "@/components/application-wrapper/Footer";
 import ThemeWrapper from "./theme-wrapper";
-import ProfileNavbar from "@/components/application-wrapper/ProfileNavbar";
+import NavbarSelector from "@/components/application-wrapper/NavbarSelector";
 import PrelineScript from "@/components/PrelineScript";
 
 const geistSans = localFont({
@@ -25,14 +24,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`} >
-        <ThemeWrapper>
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-        </ThemeWrapper>
-      </body>
-      <PrelineScript />
+        <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`} >
+            <ThemeWrapper>
+              <NavbarSelector />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </ThemeWrapper>
+        </body>
+        <PrelineScript />
     </html>
   );
 }

@@ -1,19 +1,6 @@
-import bcrypt from "bcryptjs";
 import { config } from 'dotenv';
 
 config(); 
-
-
-export async function hashPassword(password) {
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-  return hashedPassword;
-}
-
-export async function comparePasswords(plainPassword, hashedPassword) {
-  const match = await bcrypt.compare(plainPassword, hashedPassword);
-  return match;
-}
 
 export async function uploadImage(file, username) {
   const imageFormData = new FormData();

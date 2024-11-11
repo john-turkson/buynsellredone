@@ -5,10 +5,25 @@ import React from "react";
 import { useFormik } from "formik";
 import { loginScehma } from "@/utils/yup-schemas";
 import FormField from "@/components/application/FormField";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/stores/useAuthStore";
 
 export default function LoginForm() {
+  const router = useRouter();
+  const { login } = useAuthStore();
+
   const onSubmit = async (values) => {
     console.log("Form Submitted", values);
+
+    try {
+      // Perform the login
+      await login(values.email, values.password);
+
+      // Redirect to the profile page after successful login
+      router.push("/profile"); // Redirect to the profile page
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   const formik = useFormik({
@@ -46,8 +61,7 @@ export default function LoginForm() {
 
             {/* <!-- Form --> */}
             <form onSubmit={formik.handleSubmit}>
-
-              <div  className="grid gap-y-4 mt-2">
+              <div className="grid gap-y-4 mt-2">
                 {/* <!-- Email Form Group --> */}
                 <div>
                   <FormField
@@ -88,9 +102,7 @@ export default function LoginForm() {
                 >
                   Sign Up
                 </button>
-
               </div>
-
             </form>
             {/* <!-- End Form --> */}
           </div>

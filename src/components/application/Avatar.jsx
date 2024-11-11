@@ -1,11 +1,30 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaArrowRightFromBracket } from "react-icons/fa6";
+import { useAuthStore } from "@/lib/stores/useAuthStore";
 
-export default function Avatar({ username, avatarImg, userEmail }) {
-  avatarImg = "/default_profile.jpg";
+export default function Avatar() {
+  
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
+
+  // Default Props
+  const defaultImg = "/default_profile.jpg";
+
+  const handleLogout = async () => {
+    try {
+      // Perform the login
+      await logout();
+  
+      // Redirect to the profile page after successful login
+      router.push("/"); // Redirect to the profile page
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <div className="hs-dropdown relative inline-flex">
@@ -19,13 +38,13 @@ export default function Avatar({ username, avatarImg, userEmail }) {
       >
         <Image
           className="w-8 h-auto rounded-full"
-          src={avatarImg}
+          src={user?.profilePicture ? user.profilePicture : defaultImg}
           alt="Avatar"
           width={36}
           height={36}
         />
         <span className="text-gray-600 font-medium truncate max-w-[7.5rem] dark:text-neutral-400">
-          {username}
+          {user.username}
         </span>
         <svg
           className="hs-dropdown-open:rotate-180 size-4"
@@ -54,7 +73,7 @@ export default function Avatar({ username, avatarImg, userEmail }) {
             Signed in as
           </p>
           <p className="text-sm font-medium text-gray-800 dark:text-neutral-300">
-            {userEmail}
+            {user.email}
           </p>
         </div>
         <div className="p-1 space-y-0.5">
@@ -91,6 +110,7 @@ export default function Avatar({ username, avatarImg, userEmail }) {
           <Link
             className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
             href="#"
+            onClick={handleLogout}
           >
             <FaArrowRightFromBracket />
             Sign Out
