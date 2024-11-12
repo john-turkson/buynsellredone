@@ -1,5 +1,5 @@
 // netlify/functions/login.js
-import User from "../../models/User";
+const User = require('../../models/User'); 
 import { comparePasswords } from "../../src//utils//password-hashing";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
