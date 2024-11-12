@@ -1,21 +1,22 @@
 // hooks/useAuth.js
 import { useEffect } from "react";
-import { redirect } from "next/navigation";
 import { useAuthStore } from "@/lib/stores/useAuthStore";
 
 export const useAuth = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user, loadAccessTokenOnRefresh} = useAuthStore();
 
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       // Redirect to the sign-up page if the user is not authenticated
-      if (!isAuthenticated) {
-        redirect("/sign-up"); // Redirect to the sign-up page
+      if (!isAuthenticated && user == null) {
+        await loadAccessTokenOnRefresh();
+      } else {
+        return true;
       }
     };
 
     checkAuth();
-  }, [isAuthenticated]);
-
+  }, [isAuthenticated, loadAccessTokenOnRefresh, user]);
+ 
   return isAuthenticated;
 };

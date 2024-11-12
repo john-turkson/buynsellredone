@@ -7,7 +7,6 @@ import { FaArrowRightFromBracket } from "react-icons/fa6";
 import { useAuthStore } from "@/lib/stores/useAuthStore";
 
 export default function Avatar() {
-  
   const router = useRouter();
   const { user, logout } = useAuthStore();
 
@@ -40,8 +39,8 @@ export default function Avatar() {
           className="w-8 h-auto rounded-full"
           src={user?.profilePicture ? user.profilePicture : defaultImg}
           alt="Avatar"
-          width={36}
-          height={36}
+          width={24}
+          height={24}
         />
         <span className="text-gray-600 font-medium truncate max-w-[7.5rem] dark:text-neutral-400">
           {user.username}
@@ -79,7 +78,7 @@ export default function Avatar() {
         <div className="p-1 space-y-0.5">
           <Link
             className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-            href="/profile"
+            href={`/profile/${user.username}`}
           >
             <FaRegCircleUser />
             Profile

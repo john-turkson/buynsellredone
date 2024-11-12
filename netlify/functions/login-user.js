@@ -67,7 +67,7 @@ export async function handler(event) {
 
     // Create a refresh token with a long expiration time (e.g., 30 days)
     const refreshToken = jwt.sign(
-        { userId: user._id },
+        { userId: user._id, username: user.username},
         JWT_REFRESH_SECRET,
         { expiresIn: "30d" } // 30 days expiry for refresh token
       );

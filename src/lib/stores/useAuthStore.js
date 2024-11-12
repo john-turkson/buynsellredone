@@ -15,29 +15,25 @@ export const useAuthStore = create(
 
       loadAccessTokenOnRefresh: async () => {
         // Attempt to refresh access token on page load or refresh
-        if (!get().token) {
-          try {
-            const response = await axios.post(
-              "/api/refresh-token",
-              {},
-              { withCredentials: true }
-            );
+        try {
+          const response = await axios.post(
+            "/api/refresh-user-info",
+            {},
+            { withCredentials: true }
+          );
 
-            if (response.status === 200) {
-              const newAccessToken = response.data.accessToken;
-
-              if (newAccessToken) {
-                const decodedUser = jwtDecode(newAccessToken);
-                set({
-                  token: newAccessToken,
-                  isAuthenticated: true,
-                  user: decodedUser,
-                });
-              }
-            }
-          } catch (error) {
-            console.log("Error loading access token on refresh:", error);
+          if (response.status === 200) {
+            set({
+              token: response.data.accessToken,
+              isAuthenticated: true,
+              user: jwtDecode(response.data.accessToken).refreshedUserData,
+            });
           }
+
+          return true;
+        } catch (error) {
+          console.log("Error loading access token on refresh:", error);
+          return false;
         }
       },
 
@@ -65,7 +61,6 @@ export const useAuthStore = create(
             });
 
             console.log("Successfully logged in");
-            
           } else {
             console.error(response.data.error || "Login failed");
           }
@@ -81,19 +76,18 @@ export const useAuthStore = create(
           const response = await axios.post("/api/logout", null, {
             withCredentials: true, // Include cookies with the request
           });
-      
+
           // Check if the logout was successful by checking the response status
           if (response.status === 200) {
             // Handle successful logout
             console.log("User logged out successfully.");
-            
+
             // Optionally, clear the user state or redirect the user
             set({
               token: null,
               isAuthenticated: false,
               user: null,
             });
-      
           } else {
             // Handle any errors from the serverless function
             console.error(response.data.error || "Logout failed");
@@ -102,7 +96,6 @@ export const useAuthStore = create(
           console.error("Error during logout:", error);
         }
       },
-      
     }),
     {
       name: "auth", // Key to store state in localStorage

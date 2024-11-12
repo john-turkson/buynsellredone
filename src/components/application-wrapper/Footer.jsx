@@ -101,7 +101,7 @@ export default function Footer() {
           <div className="w-full max-w-5xl px-4 xl:px-0 py-10 lg:pt-16 mx-auto">
             <div className="inline-flex items-center">
               {/* <!-- Logo --> */}
-              <Image src="logo.svg" alt="Logo" width={150} height={150} />
+              <Image src="/logo.svg" alt="Logo" width={150} height={150} />
               {/* <!-- End Logo --> */}
 
               <div className="border-s border-neutral-700 ps-5 ms-5">

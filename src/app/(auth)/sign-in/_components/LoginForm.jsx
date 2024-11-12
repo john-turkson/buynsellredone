@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { loginScehma } from "@/utils/yup-schemas";
 import FormField from "@/components/application/FormField";
@@ -10,7 +10,8 @@ import { useAuthStore } from "@/lib/stores/useAuthStore";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { login } = useAuthStore();
+  const { login, user } = useAuthStore();
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const onSubmit = async (values) => {
     console.log("Form Submitted", values);
@@ -18,13 +19,20 @@ export default function LoginForm() {
     try {
       // Perform the login
       await login(values.email, values.password);
-
-      // Redirect to the profile page after successful login
-      router.push("/profile"); // Redirect to the profile page
+      setLoginSuccess(true);
+      
     } catch (error) {
       console.error("Login failed:", error);
     }
+
   };
+
+  useEffect(() => {
+    // Redirect only if login is successful and user is populated
+    if (loginSuccess && user) {
+      router.push(`/profile/${user.username}`);
+    }
+  }, [loginSuccess, user, router]);
 
   const formik = useFormik({
     initialValues: {

@@ -1,30 +1,28 @@
-import { config } from 'dotenv';
-
-config(); 
-
-export async function uploadImage(file, username) {
+export const uploadProfilePictureToCloudinary = async (image, username) => {
   const imageFormData = new FormData();
-  imageFormData.append("file", file);
-  imageFormData.append(
-    "upload_preset",
-    process.env.CLOUDINARY_UPLOAD_PRESET
-  ); // replace with your Cloudinary unsigned preset
-  imageFormData.append("folder", `Users/${username}/Images`); // replace with the desired Cloudinary directory
-  imageFormData.append("public_id", `profilePicture`); // use custom name or default to image name
 
-  // Upload the image to Cloudinary and get the secure URL
+  // Append the necessary data for Cloudinary upload
+  imageFormData.append("file", image);
+  imageFormData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+  imageFormData.append("folder", `Users/${username}/Images`);
+  imageFormData.append("public_id", `profilePicture`);
+
   try {
-    const response = await fetch(process.env.CLOUDINARY_URL_ENDPOINT, {
+    // Upload the image to Cloudinary
+    const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL_ENDPOINT, {
       method: "POST",
       body: imageFormData,
     });
+
     const data = await response.json();
+
+    // Return the secure URL of the uploaded image
     return data.secure_url;
   } catch (error) {
     console.error("Upload failed:", error);
     return null;
   }
-}
+};
 
 export async function uploadImages(files, username) {
   // Convert FileList to Array

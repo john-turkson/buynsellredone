@@ -8,70 +8,70 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { registrationScehma } from "@/utils/yup-schemas";
 import SuccessAlert from "@/components/application/SuccessAlert";
+import { uploadProfilePictureToCloudinary } from "@/utils/auth-functions";
 
 export default function RegisterForm() {
   const [alertVisible, setAlertVisible] = useState(false);
 
-  const uploadProfilePictureToCloudinary = async(image, username) => {
-    const imageFormData = new FormData();
+  // const uploadProfilePictureToCloudinary = async(image, username) => {
+  //   const imageFormData = new FormData();
   
-    // Append the necessary data for Cloudinary upload
-    imageFormData.append("file", image);
-    imageFormData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET); 
-    imageFormData.append("folder", `Users/${username}/Images`); 
-    imageFormData.append("public_id", `profilePicture`); 
+  //   // Append the necessary data for Cloudinary upload
+  //   imageFormData.append("file", image);
+  //   imageFormData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET); 
+  //   imageFormData.append("folder", `Users/${username}/Images`); 
+  //   imageFormData.append("public_id", `profilePicture`); 
   
-    try {
-      // Upload the image to Cloudinary
-      const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL_ENDPOINT, {
-        method: "POST",
-        body: imageFormData,
-      });
+  //   try {
+  //     // Upload the image to Cloudinary
+  //     const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL_ENDPOINT, {
+  //       method: "POST",
+  //       body: imageFormData,
+  //     });
   
-      const data = await response.json();
+  //     const data = await response.json();
   
-      // Return the secure URL of the uploaded image
-      return data.secure_url;
-    } catch (error) {
-      console.error("Upload failed:", error);
-      return null;
-    }
-  }
+  //     // Return the secure URL of the uploaded image
+  //     return data.secure_url;
+  //   } catch (error) {
+  //     console.error("Upload failed:", error);
+  //     return null;
+  //   }
+  // }
   
 
   const onSubmit = async (values, actions) => {
     console.log("Form Submitted", values);
 
-    const userName = values.username;
+    // const imageResponse = await uploadProfilePictureToCloudinary(values.profilePicture, userName);
+    // console.log(imageResponse);
 
-    const imageResponse = await uploadProfilePictureToCloudinary(values.profilePicture, userName);
-    console.log(imageResponse);
+    // const profileData = {
+    //   username: values.username,
+    //   email: values.email,
+    //   password: values.password,
+    //   phone: values.phoneNumber,
+    //   profilePicture: imageResponse,
+    // };
 
-    const profileData = {
-      username: values.username,
-      email: values.email,
-      password: values.password,
-      phone: values.phoneNumber,
-      profilePicture: imageResponse,
-    };
-
-    //Send User Data to MongoDB
-    try {
-      const response = await axios.post("/api/register-user", profileData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    // //Send User Data to MongoDB
+    // try {
+    //   const response = await axios.post("/api/register-user", profileData, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
      
-      if (response.status === 201) {
-        setAlertVisible(true);
-      } 
+    //   if (response.status === 201) {
+    //     setAlertVisible(true);
+    //     actions.resetForm();
+    //   } 
 
-    } catch (error) {
-      console.error("Error creating user:", error.message);
-    }
+    // } catch (error) {
+    //   console.error("Error creating user:", error.message);
+    // }
     
-    actions.reset();
+    
   };
 
   const formik = useFormik({
