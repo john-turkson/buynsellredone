@@ -1,14 +1,13 @@
-const mongoose = require('mongoose');
-const User = require('../../models/User');
-const { hashPassword } = require('../../src/utils/password-hashing');
-const { config } = require('dotenv');
+import mongoose from 'mongoose';
+import User from '../../models/User.mjs';
+import { hashPassword } from '../../src/utils/password-hashing.mjs';
+import { config } from 'dotenv';
 
 config();
 
 const DEFAULT_PROFILE_PICTURE = 'https://res.cloudinary.com/ddznwdhef/image/upload/v1731142760/default_profile_hsnicz.jpg';
 
-exports.handler = async (event) => {
-
+export async function handler(event) {
   // CORS Preflight Handler
   if (event.httpMethod === "OPTIONS") {
     return {
@@ -60,7 +59,7 @@ exports.handler = async (event) => {
     const newUser = new User({ username, password: hashedPassword, email, phone });
     
     if (profilePicture && profilePicture !== "") {
-      newUser.profilePicture = profilePicture
+      newUser.profilePicture = profilePicture;
     } else {
       newUser.profilePicture = DEFAULT_PROFILE_PICTURE;
     }
@@ -85,4 +84,4 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: "Server error", error: error.message }),
     };
   }
-};
+}

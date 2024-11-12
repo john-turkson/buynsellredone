@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "../../models/User";
+import User from "../../models/User.mjs";
 import jwt from "jsonwebtoken"; // Assuming you're using JWT for token decoding
 import cookie from "cookie";
 

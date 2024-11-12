@@ -1,19 +1,21 @@
-// netlify/functions/login.js
-const User = require("../../models/User");
-const mongoose = require("mongoose");
-const comparePasswords = require("../../src//utils//password-hashing");
-const jwt = require("jsonwebtoken");
+// netlify/functions/login.mjs
+import mongoose from 'mongoose';
+import User from '../../models/User.mjs';
+import { comparePasswords } from '../../src/utils/password-hashing';
+import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET; // You should define a separate secret for refresh tokens
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET; // Define a separate secret for refresh tokens
 
+// Connect to the MongoDB database if not already connected
 const connectToDB = async () => {
   if (mongoose.connection.readyState === 0) {
     await mongoose.connect(process.env.MONGODB_URI, { dbName: "Main" });
   }
 };
 
-exports.handler = async (event) => {
+// Define the handler for the login function
+export const handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -24,7 +26,7 @@ exports.handler = async (event) => {
   try {
     const { email, password } = JSON.parse(event.body);
 
-    // Initiate MongoDB Connection using mongoose
+    // Initiate MongoDB connection
     await connectToDB();
 
     const user = await User.findOne({ email });

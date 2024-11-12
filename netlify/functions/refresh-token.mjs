@@ -1,6 +1,5 @@
-// netlify/functions/refresh-token.js
-import jwt from "jsonwebtoken";
-import cookie from "cookie";
+import jwt from 'jsonwebtoken';
+import cookie from 'cookie';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
@@ -30,19 +29,21 @@ export async function handler(event) {
 
     // Create a new access token using the user's ID from the decoded refresh token
     const newAccessToken = jwt.sign(
-      {
-        userId: decoded.userId,
-      },
+      { userId: decoded.userId },
       JWT_SECRET,
-      { expiresIn: "1h" } // Set the new access token to expire in 1 hour
+      { expiresIn: '1h' } // Set the new access token to expire in 1 hour
     );
 
     return {
       statusCode: 200,
       body: JSON.stringify({ accessToken: newAccessToken }),
+      headers: {
+        "Access-Control-Allow-Origin": "*",  // Allow cross-origin requests
+        "Access-Control-Allow-Headers": "Content-Type",  // Allow content type headers
+      },
     };
   } catch (error) {
-    console.error("Error refreshing token:", error);
+    console.error('Error refreshing token:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Failed to refresh token" }),
