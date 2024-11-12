@@ -1,8 +1,8 @@
 // netlify/functions/login.js
-const User = require('../../models/User'); 
-import { comparePasswords } from "../../src//utils//password-hashing";
-import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
+const User = require("../../models/User");
+const mongoose = require("mongoose");
+const comparePasswords = require("../../src//utils//password-hashing");
+const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET; // You should define a separate secret for refresh tokens
@@ -13,7 +13,7 @@ const connectToDB = async () => {
   }
 };
 
-export async function handler(event) {
+exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -67,10 +67,10 @@ export async function handler(event) {
 
     // Create a refresh token with a long expiration time (e.g., 30 days)
     const refreshToken = jwt.sign(
-        { userId: user._id, username: user.username},
-        JWT_REFRESH_SECRET,
-        { expiresIn: "30d" } // 30 days expiry for refresh token
-      );
+      { userId: user._id, username: user.username },
+      JWT_REFRESH_SECRET,
+      { expiresIn: "30d" } // 30 days expiry for refresh token
+    );
 
     // Set the cookie with the JWT token in the response headers
     return {
@@ -92,4 +92,4 @@ export async function handler(event) {
       body: JSON.stringify({ error: "Internal server error" }),
     };
   }
-}
+};

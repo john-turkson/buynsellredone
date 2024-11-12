@@ -1,14 +1,14 @@
-import mongoose from "mongoose";
-import User from "../../models/User";
-import { hashPassword } from '../../src/utils/password-hashing';
-import { config } from 'dotenv';
+const mongoose = require('mongoose');
+const User = require('../../models/User');
+const { hashPassword } = require('../../src/utils/password-hashing');
+const { config } = require('dotenv');
 
-config(); 
+config();
 
 const DEFAULT_PROFILE_PICTURE = 'https://res.cloudinary.com/ddznwdhef/image/upload/v1731142760/default_profile_hsnicz.jpg';
 
-export const handler = async (event) => {
-    
+exports.handler = async (event) => {
+
   // CORS Preflight Handler
   if (event.httpMethod === "OPTIONS") {
     return {
