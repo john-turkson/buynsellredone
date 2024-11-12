@@ -43,33 +43,33 @@ export default function RegisterForm() {
   const onSubmit = async (values, actions) => {
     console.log("Form Submitted", values);
 
-    // const imageResponse = await uploadProfilePictureToCloudinary(values.profilePicture, userName);
-    // console.log(imageResponse);
+    const imageResponse = await uploadProfilePictureToCloudinary(values.profilePicture, userName);
+    console.log(imageResponse);
 
-    // const profileData = {
-    //   username: values.username,
-    //   email: values.email,
-    //   password: values.password,
-    //   phone: values.phoneNumber,
-    //   profilePicture: imageResponse,
-    // };
+    const profileData = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      phone: values.phoneNumber,
+      profilePicture: imageResponse,
+    };
 
-    // //Send User Data to MongoDB
-    // try {
-    //   const response = await axios.post("/api/register-user", profileData, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
+    //Send User Data to MongoDB
+    try {
+      const response = await axios.post(".netlify/functions/register-user", profileData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
      
-    //   if (response.status === 201) {
-    //     setAlertVisible(true);
-    //     actions.resetForm();
-    //   } 
+      if (response.status === 201) {
+        setAlertVisible(true);
+        actions.resetForm();
+      } 
 
-    // } catch (error) {
-    //   console.error("Error creating user:", error.message);
-    // }
+    } catch (error) {
+      console.error("Error creating user:", error.message);
+    }
     
     
   };

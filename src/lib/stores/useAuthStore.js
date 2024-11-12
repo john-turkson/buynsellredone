@@ -17,7 +17,7 @@ export const useAuthStore = create(
         // Attempt to refresh access token on page load or refresh
         try {
           const response = await axios.post(
-            "/api/refresh-user-info",
+            ".netlify/functions/refresh-user-info",
             {},
             { withCredentials: true }
           );
@@ -41,7 +41,7 @@ export const useAuthStore = create(
       login: async (email, password) => {
         try {
           // Make API call to login
-          const response = await axios.post("/api/login-user", {
+          const response = await axios.post(".netlify/functions/login-user", {
             email,
             password,
           });
@@ -73,7 +73,7 @@ export const useAuthStore = create(
       logout: async () => {
         try {
           // Call the serverless function to remove the refreshToken cookie
-          const response = await axios.post("/api/logout", null, {
+          const response = await axios.post(".netlify/functions/logout", null, {
             withCredentials: true, // Include cookies with the request
           });
 
