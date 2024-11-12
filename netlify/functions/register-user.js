@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import User from "../../models/User";
-import { hashPassword } from '@/utils/password-hashing';
+import { hashPassword } from '../../src/utils/password-hashing';
 import { config } from 'dotenv';
 
 config(); 
