@@ -1,15 +1,17 @@
 'use client'
 
 import React from 'react'
-import { useAuthStore } from '@/lib/stores/useAuthStore'
+import { useSession } from "next-auth/react"
 import ProfileNavbar from './ProfileNavbar'
 import Navbar from './Navbar'
 
 export default function NavbarSelector() {
 
-    const { isAuthenticated } = useAuthStore();
+  
 
   return (
-    isAuthenticated? <ProfileNavbar /> : <Navbar />
+    //  <ProfileNavbar /> : <Navbar />
+    <>
+    </>
   )
 }

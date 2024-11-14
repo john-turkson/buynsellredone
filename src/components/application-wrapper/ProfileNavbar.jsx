@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react"
 import Link from "next/link";
 import ThemeSwitch from "../application/ThemeSwitcher";
 import Avatar from "../application/Avatar";
 
 export default function ProfileNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession()
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -95,7 +97,7 @@ export default function ProfileNavbar() {
             
               {/* <!-- Button Group --> */}
               <div className="relative flex flex-wrap items-center gap-x-1.5 md:ps-2.5 mt-1 md:mt-0 md:ms-1.5 before:block before:absolute before:top-1/2 before:-start-px before:w-px before:h-4 before:bg-gray-300 before:-translate-y-1/2 dark:before:bg-neutral-700">
-                <Avatar username={'Test Name'} userEmail={'herewego@here.com'} />
+                <Avatar username={session?.user?.username} userEmail={session?.user.email} profilePicture={session?.user?.profilePicture} />
               </div>
               {/* <!-- End Button Group --> */}
              
