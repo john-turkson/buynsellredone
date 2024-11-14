@@ -4,20 +4,18 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaArrowRightFromBracket } from "react-icons/fa6";
-import { useAuthStore } from "@/lib/stores/useAuthStore";
+import { signOut } from "next-auth/react"
 
-export default function Avatar() {
+export default function Avatar({username, email, profilePicture}) {
   const router = useRouter();
-  const { user, logout } = useAuthStore();
 
   // Default Props
   const defaultImg = "/default_profile.jpg";
 
   const handleLogout = async () => {
     try {
-      // Perform the login
-      await logout();
-  
+      // Perform the logout
+      // signOut();
       // Redirect to the profile page after successful login
       router.push("/"); // Redirect to the profile page
     } catch (error) {
@@ -37,13 +35,13 @@ export default function Avatar() {
       >
         <Image
           className="w-8 h-auto rounded-full"
-          src={user?.profilePicture ? user.profilePicture : defaultImg}
+          src={profilePicture ? profilePicture : defaultImg}
           alt="Avatar"
           width={24}
           height={24}
         />
         <span className="text-gray-600 font-medium truncate max-w-[7.5rem] dark:text-neutral-400">
-          {user.username}
+          {username}
         </span>
         <svg
           className="hs-dropdown-open:rotate-180 size-4"
@@ -72,13 +70,13 @@ export default function Avatar() {
             Signed in as
           </p>
           <p className="text-sm font-medium text-gray-800 dark:text-neutral-300">
-            {user.email}
+            {email}
           </p>
         </div>
         <div className="p-1 space-y-0.5">
           <Link
             className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-            href={`/profile/${user.username}`}
+            href={`/profile`}
           >
             <FaRegCircleUser />
             Profile

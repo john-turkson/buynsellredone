@@ -6,33 +6,24 @@ import { useFormik } from "formik";
 import { loginScehma } from "@/utils/yup-schemas";
 import FormField from "@/components/application/FormField";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/stores/useAuthStore";
+import { signIn } from "next-auth/react"
 
 export default function LoginForm() {
   const router = useRouter();
-  const { login, user } = useAuthStore();
-  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const onSubmit = async (values) => {
     console.log("Form Submitted", values);
 
     try {
       // Perform the login
-      await login(values.email, values.password);
-      setLoginSuccess(true);
+      signIn('credentials', {...values, redirect: false})
+      router.push('/profile')
       
     } catch (error) {
       console.error("Login failed:", error);
     }
 
   };
-
-  useEffect(() => {
-    // Redirect only if login is successful and user is populated
-    if (loginSuccess && user) {
-      router.push(`/profile/${user.username}`);
-    }
-  }, [loginSuccess, user, router]);
 
   const formik = useFormik({
     initialValues: {

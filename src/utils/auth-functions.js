@@ -1,18 +1,26 @@
+import axios from "axios";
+
 export const uploadProfilePictureToCloudinary = async (image, username) => {
   const imageFormData = new FormData();
 
   // Append the necessary data for Cloudinary upload
   imageFormData.append("file", image);
-  imageFormData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+  imageFormData.append(
+    "upload_preset",
+    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+  );
   imageFormData.append("folder", `Users/${username}/Images`);
   imageFormData.append("public_id", `profilePicture`);
 
   try {
     // Upload the image to Cloudinary
-    const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL_ENDPOINT, {
-      method: "POST",
-      body: imageFormData,
-    });
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_CLOUDINARY_URL_ENDPOINT,
+      {
+        method: "POST",
+        body: imageFormData,
+      }
+    );
 
     const data = await response.json();
 
@@ -51,4 +59,15 @@ export async function uploadImages(files, username) {
         return null;
       });
   });
+}
+
+export async function loginUser() {
+  try {
+    return await axios.post("./.netlify/functions/login-user", credentials).then(response => {
+      const { user } = response;
+      return user;
+    });
+  } catch (error) {
+    throw new Error("Something went wrong: ", error);
+  }
 }
