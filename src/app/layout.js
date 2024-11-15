@@ -26,13 +26,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-        <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`} >
-            <ThemeWrapper>
-              <Navbar />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </ThemeWrapper>
-        </body>
+        <SessionWrapper>
+          <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`} >
+              <ThemeWrapper>
+                <NavbarSelector />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </ThemeWrapper>
+          </body>
+        </SessionWrapper>
         <PrelineScript />
     </html>
   );

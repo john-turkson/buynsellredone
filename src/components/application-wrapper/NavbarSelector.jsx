@@ -1,17 +1,9 @@
-'use client'
+import { auth } from "@/auth";
+import ProfileNavbar from './ProfileNavbar';
+import Navbar from './Navbar';
 
-import React from 'react'
-import { useSession } from "next-auth/react"
-import ProfileNavbar from './ProfileNavbar'
-import Navbar from './Navbar'
+export default async function NavbarSelector() {
+  const session = await auth();
 
-export default function NavbarSelector() {
-
-  
-
-  return (
-    //  <ProfileNavbar /> : <Navbar />
-    <>
-    </>
-  )
+  return session?.user ? <ProfileNavbar /> : <Navbar />;
 }

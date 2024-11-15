@@ -10,28 +10,35 @@ export const authConfig = {
     Credentials({
       name: "credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "example@email.com",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "Enter a Password",
-        },
+        email: {},
+        password: {},
       },
       async authorize(credentials) {
-        try {
-          return loginUser(credentials);
-        } catch (error) {
-          throw new Error("Error in Auth.js Authorize()!", error);
+        // let user = null;
+
+        const user = await loginUser(credentials);
+        // console.log(user);
+
+        if (user) {
+          return user;
+        } else {
+          throw new Error("Invalid Credentials");
         }
       },
     }),
   ],
-  sesssion: {
-    stratgey: "jwt",
+  callbacks: {
+    async session({ session, token }) {
+      // Attach the user information to the session
+      session.user = token.user;
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
   },
   secret: process.env.JWT_SECRET,
   debug: process.env.NODE_ENV === "development",

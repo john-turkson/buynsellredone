@@ -61,13 +61,12 @@ export async function uploadImages(files, username) {
   });
 }
 
-export async function loginUser() {
+export async function loginUser(credentials) {
   try {
-    return await axios.post("./.netlify/functions/login-user", credentials).then(response => {
-      const { user } = response;
-      return user;
-    });
+    const response = await axios.post("http://localhost:8888/netlify-api/login-user", credentials);
+    return response.data.user;
   } catch (error) {
-    throw new Error("Something went wrong: ", error);
+    console.error("Error in loginUser:", error);
+    throw error; // Re-throw the original error to preserve details
   }
 }

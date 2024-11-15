@@ -4,6 +4,14 @@
 [functions]
   directory = "netlify/functions"
 
+[[redirects]]
+  from = "/netlify-api/*"
+  to = ".netlify/functions/:splat"
+  status = 200
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 [dev]
   framework = "#auto"
   autoLaunch = false

@@ -1,27 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { useRouter } from "next/navigation";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaArrowRightFromBracket } from "react-icons/fa6";
-import { signOut } from "next-auth/react"
+import { signOut } from "next-auth/react";
 
-export default function Avatar({username, email, profilePicture}) {
-  const router = useRouter();
-
+export default function Avatar({ username, email, profilePicture }) {
   // Default Props
   const defaultImg = "/default_profile.jpg";
-
-  const handleLogout = async () => {
-    try {
-      // Perform the logout
-      // signOut();
-      // Redirect to the profile page after successful login
-      router.push("/"); // Redirect to the profile page
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
 
   return (
     <div className="hs-dropdown relative inline-flex">
@@ -76,10 +64,10 @@ export default function Avatar({username, email, profilePicture}) {
         <div className="p-1 space-y-0.5">
           <Link
             className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-            href={`/profile`}
+            href={`/account`}
           >
             <FaRegCircleUser />
-            Profile
+            My Account
           </Link>
           <Link
             className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
@@ -104,14 +92,14 @@ export default function Avatar({username, email, profilePicture}) {
             Cart
           </Link>
 
-          <Link
-            className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
-            href="#"
-            onClick={handleLogout}
+          <button
+            className="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700"
+            type="submit"
+            onClick={() => signOut({redirectTo: '/'})}
           >
             <FaArrowRightFromBracket />
             Sign Out
-          </Link>
+          </button>
         </div>
       </div>
     </div>

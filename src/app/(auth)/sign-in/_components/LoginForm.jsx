@@ -16,8 +16,7 @@ export default function LoginForm() {
 
     try {
       // Perform the login
-      signIn('credentials', {...values, redirect: false})
-      router.push('/profile')
+      signIn('credentials', {...values, redirectTo: '/account'})
       
     } catch (error) {
       console.error("Login failed:", error);

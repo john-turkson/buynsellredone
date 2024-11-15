@@ -1,16 +1,11 @@
-"use client";
 
-import { useState } from "react";
-import { useSession } from "next-auth/react"
+import { auth } from "@/auth";
 import Link from "next/link";
 import ThemeSwitch from "../application/ThemeSwitcher";
 import Avatar from "../application/Avatar";
 
-export default function ProfileNavbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { data: session } = useSession()
-
-  const toggleMenu = () => setIsOpen(!isOpen);
+export default async function ProfileNavbar() {
+  const session = await auth();
 
   return (
     <header className="bg-white border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full">
@@ -23,59 +18,10 @@ export default function ProfileNavbar() {
             BuynSell
           </Link>
 
-          <div className="md:hidden">
-            <button
-              type="button"
-              className="relative size-9 flex justify-center items-center text-sm font-semibold rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none"
-              onClick={toggleMenu}
-              aria-expanded={isOpen}
-              aria-controls="hs-header-classic"
-              aria-label="Toggle navigation"
-            >
-              {isOpen ? (
-                <svg
-                  className="size-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              ) : (
-                <svg
-                  className="size-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="3" x2="21" y1="6" y2="6" />
-                  <line x1="3" x2="21" y1="12" y2="12" />
-                  <line x1="3" x2="21" y1="18" y2="18" />
-                </svg>
-              )}
-              <span className="sr-only">Toggle navigation</span>
-            </button>
-          </div>
         </div>
 
         <div
           id="hs-header-classic"
-          className={`hs-collapse overflow-hidden transition-all duration-300 basis-full grow md:block ${
-            isOpen ? "block" : "hidden"
-          }`}
         >
           <div className="overflow-hidden overflow-y-auto max-h-[75vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
             <div className="py-2 md:py-0 flex flex-col md:flex-row md:items-center md:justify-end gap-0.5 md:gap-1">
@@ -87,7 +33,7 @@ export default function ProfileNavbar() {
               </Link>
 
               <Link
-                href="/user-listings"
+                href="#"
                 className="p-2 flex items-center text-sm text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 dark:text-neutral-200 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
               >
                 My Listings
@@ -97,7 +43,7 @@ export default function ProfileNavbar() {
             
               {/* <!-- Button Group --> */}
               <div className="relative flex flex-wrap items-center gap-x-1.5 md:ps-2.5 mt-1 md:mt-0 md:ms-1.5 before:block before:absolute before:top-1/2 before:-start-px before:w-px before:h-4 before:bg-gray-300 before:-translate-y-1/2 dark:before:bg-neutral-700">
-                <Avatar username={session?.user?.username} userEmail={session?.user.email} profilePicture={session?.user?.profilePicture} />
+                <Avatar username={session.user.username} email={session.user.email} profilePicture={session.user.profilePicture} />
               </div>
               {/* <!-- End Button Group --> */}
              
