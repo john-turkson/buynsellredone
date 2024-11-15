@@ -4,6 +4,9 @@ import Footer from "@/components/application-wrapper/Footer";
 import ThemeWrapper from "./theme-wrapper";
 import NavbarSelector from "@/components/application-wrapper/NavbarSelector";
 import PrelineScript from "@/components/PrelineScript";
+import SessionWrapper from "@/context/SessionWrapper";
+import Navbar from "@/components/application-wrapper/Navbar";
+import MainContent from "@/components/application-wrapper/MainContent";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,14 +27,20 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-        <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`} >
-            <ThemeWrapper>
-              <NavbarSelector />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </ThemeWrapper>
+      <SessionWrapper>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`}
+        >
+          <ThemeWrapper>
+            <NavbarSelector />
+            <MainContent>
+              {children}
+            </MainContent>
+            <Footer />
+          </ThemeWrapper>
         </body>
-        <PrelineScript />
+      </SessionWrapper>
+      <PrelineScript />
     </html>
   );
 }

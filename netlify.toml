@@ -1,14 +1,18 @@
 [build]
   functions = "netlify/functions"
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
 [functions]
   directory = "netlify/functions"
 
+[[redirects]]
+  from = "/netlify-api/*"
+  to = ".netlify/functions/:splat"
+  status = 200
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 [dev]
-  framework = "#auto"
+  framework = "next"
+  port = 8888
   autoLaunch = false

@@ -1,15 +1,9 @@
-'use client'
+import { auth } from "@/auth";
+import ProfileNavbar from './ProfileNavbar';
+import Navbar from './Navbar';
 
-import React from 'react'
-import { useAuthStore } from '@/lib/stores/useAuthStore'
-import ProfileNavbar from './ProfileNavbar'
-import Navbar from './Navbar'
+export default async function NavbarSelector() {
+  const session = await auth();
 
-export default function NavbarSelector() {
-
-    const { isAuthenticated } = useAuthStore();
-
-  return (
-    isAuthenticated? <ProfileNavbar /> : <Navbar />
-  )
+  return session?.user ? <ProfileNavbar /> : <Navbar />;
 }
