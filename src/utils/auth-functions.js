@@ -63,7 +63,7 @@ export async function uploadImages(files, username) {
 
 export async function loginUser(credentials) {
   try {
-    const response = await axios.post("http://localhost:8888/netlify-api/login-user", credentials);
+    const response = await axios.post("https://buynselll.netlify.app/.netlify/functions/login-user", credentials);
     return response.data.user;
   } catch (error) {
     console.error("Error in loginUser:", error);
