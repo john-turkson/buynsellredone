@@ -13,5 +13,6 @@
   package = "@netlify/plugin-nextjs"
 
 [dev]
-  framework = "#auto"
+  framework = "next"
+  port = 8888
   autoLaunch = false

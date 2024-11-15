@@ -5,7 +5,7 @@ import { config } from 'dotenv';
 
 config();
 
-const DEFAULT_PROFILE_PICTURE = 'https://res.cloudinary.com/ddznwdhef/image/upload/v1731142760/default_profile_hsnicz.jpg';
+const DEFAULT_PROFILE_PICTURE = 'https://res.cloudinary.com/ddznwdhef/image/upload/t_ProfilePicture/v1731692514/default_profile_cu3qbl.jpg';
 
 export async function handler(event) {
   // CORS Preflight Handler

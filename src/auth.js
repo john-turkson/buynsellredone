@@ -39,6 +39,10 @@ export const authConfig = {
       }
       return token;
     },
+    async redirect({ url, baseUrl }) {
+      // Ensure redirects stay within the current base URL
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
   },
   secret: process.env.JWT_SECRET,
   debug: process.env.NODE_ENV === "development",

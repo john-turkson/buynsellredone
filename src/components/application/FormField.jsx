@@ -33,7 +33,7 @@ export default function FormField({
             className={`py-3 px-4 block w-full rounded-lg text-sm ${
               touched && errors
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "border-gray-200 focus:border-blue-500"
+                : "border-gray-200 focus:border-purple-500"
             } dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400`}
             value={value} // Use the controlled value from Formik
             onChange={onChange} // Formik handles onChange
