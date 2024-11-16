@@ -64,7 +64,7 @@ export async function uploadImages(files, username) {
 
 export async function loginUser(credentials) {
   try {
-    const response = await axios.post(`${process.env.AUTH_URL}/netlify-api/login-user`, credentials);
+    const response = await axios.post(`/.netlify/functions/login-user`, credentials);
     
     // Check if the response has a user
     if (response.data && response.data.user) {
