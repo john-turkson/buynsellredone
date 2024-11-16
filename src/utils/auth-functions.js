@@ -61,12 +61,43 @@ export async function uploadImages(files, username) {
   });
 }
 
+
 export async function loginUser(credentials) {
   try {
-    const response = await axios.post("https://buynselll.netlify.app/.netlify/functions/login-user", credentials);
-    return response.data.user;
+    const response = await axios.post(`${process.env.AUTH_URL}/netlify-api/login-user`, credentials);
+    
+    // Check if the response has a user
+    if (response.data && response.data.user) {
+      return response.data.user;
+    } else {
+      throw new Error("No user data received. Please try again.");
+    }
   } catch (error) {
-    console.error("Error in loginUser:", error);
-    throw error; // Re-throw the original error to preserve details
+    // Log specific details for debugging but avoid exposing sensitive data
+    console.error("Error in loginUser:", {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+    });
+
+    // Customize error messages based on the error type
+    if (error.response) {
+      // Server responded with a status other than 2xx
+      const status = error.response.status;
+      if (status === 401) {
+        throw new Error("Invalid credentials. Please check your email and password.");
+      } else if (status === 500) {
+        throw new Error("Server error. Please try again later.");
+      } else {
+        throw new Error(`Login failed with status code ${status}.`);
+      }
+    } else if (error.request) {
+      // Request was made but no response received
+      throw new Error("Network error. Please check your connection and try again.");
+    } else {
+      // Other unexpected errors
+      throw new Error("An unexpected error occurred. Please try again.");
+    }
   }
 }
+

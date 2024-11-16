@@ -1,7 +1,6 @@
 // netlify/functions/login.js
 import User from "../../models/User";
 import { comparePasswords } from "@/utils/password-hashing";
-import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
 const connectToDB = async () => {
@@ -50,15 +49,6 @@ export const handler = async (event) => {
         },
       };
     }
-
-    // Create JWT token when user is authenticated
-    // const accessToken = jwt.sign(
-    //   {
-    //     userId: user._id,
-    //   },
-    //   JWT_SECRET,
-    //   { expiresIn: "1h" }
-    // );
 
     // User Object to be returned
     const userData = {

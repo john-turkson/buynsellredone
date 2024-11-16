@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 import User from "../../models/User.mjs";
-import jwt from "jsonwebtoken"; // Assuming you're using JWT for token decoding
-import cookie from "cookie";
 
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 

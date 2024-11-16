@@ -14,15 +14,32 @@ export const authConfig = {
         password: {},
       },
       async authorize(credentials) {
-        // let user = null;
+        try {
+          // Ensure the credentials are provided
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("Email and password are required.");
+          }
 
-        const user = await loginUser(credentials);
-        // console.log(user);
+          // Attempt to login the user
+          const user = await loginUser(credentials);
 
-        if (user) {
-          return user;
-        } else {
-          throw new Error("Invalid Credentials");
+          // Check if the user was successfully authenticated
+          if (user) {
+            return user;
+          } else {
+            throw new Error(
+              "Invalid credentials. Please check your email and password."
+            );
+          }
+        } catch (error) {
+          // Log the error for debugging purposes (optional, but recommended)
+          console.error("Authorization error:", error);
+
+          // Throw a user-friendly error message
+          throw new Error(
+            error.message ||
+              "An error occurred during login. Please try again later."
+          );
         }
       },
     }),
@@ -44,7 +61,7 @@ export const authConfig = {
       return url.startsWith(baseUrl) ? url : baseUrl;
     },
   },
-  secret: process.env.JWT_SECRET,
+  secret: process.env.AUTH_SECRET,
   debug: process.env.NODE_ENV === "development",
 };
 
