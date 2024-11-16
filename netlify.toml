@@ -1,10 +1,7 @@
-[build]
-  functions = "netlify/functions"
-
 [functions]
   node_bundler = "esbuild"
-  directory = "netlify/functions"  # Corrected 'functions' to 'directory' to match Netlify's expected config
-
+  directory = "netlify/functions" 
+  
 [dev]
   framework = "next"
   port = 8888

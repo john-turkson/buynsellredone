@@ -72,13 +72,13 @@ export const handler = async (event) => {
       username: user.username,
       email: user.email,
       profilePicture: user.profilePicture,
-      phoneNumber: user.phone
+      phoneNumber: user.phone,
     };
 
     console.log("Login successful, returning user data:", userData);
 
-    // Set the cookie with the JWT token in the response headers
-    return {
+    // Return response with user data
+    const response = {
       statusCode: 200,
       headers: {
         "Access-Control-Allow-Origin": "*",
@@ -89,6 +89,9 @@ export const handler = async (event) => {
         user: userData,
       }),
     };
+    console.log("Returning response:", response);
+    return response;
+
   } catch (error) {
     console.error("Login error:", error);
     return {
