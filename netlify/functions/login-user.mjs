@@ -1,17 +1,26 @@
-// netlify/functions/login.js
+// netlify/functions/login-user.mjs
+
 import User from "../../models/User";
 import { comparePasswords } from "@/utils/password-hashing";
 import mongoose from "mongoose";
 
 const connectToDB = async () => {
+  console.log("Connecting to MongoDB...");
   if (mongoose.connection.readyState === 0) {
+    console.log("No active connection, establishing new connection...");
     await mongoose.connect(process.env.MONGODB_URI, { dbName: "Main" });
+    console.log("MongoDB connection established.");
+  } else {
+    console.log("Already connected to MongoDB.");
   }
 };
 
 // Define the handler for the login function
 export const handler = async (event) => {
+  console.log("Received event:", event);
+
   if (event.httpMethod !== "POST") {
+    console.log("Invalid HTTP method:", event.httpMethod);
     return {
       statusCode: 405,
       body: JSON.stringify({ error: "Method not allowed" }),
@@ -20,13 +29,17 @@ export const handler = async (event) => {
 
   try {
     const { email, password } = JSON.parse(event.body);
+    console.log("Parsed request body:", { email, password });
 
     // Initiate MongoDB connection
     await connectToDB();
 
+    // Check if user exists
     const user = await User.findOne({ email });
+    console.log("User found:", user);
 
     if (!user) {
+      console.log("User does not exist.");
       return {
         statusCode: 400,
         body: JSON.stringify({ message: "User does not exist!" }),
@@ -37,9 +50,12 @@ export const handler = async (event) => {
       };
     }
 
+    // Validate the password
     const isPasswordValid = await comparePasswords(password, user.password);
+    console.log("Password valid:", isPasswordValid);
 
     if (!isPasswordValid) {
+      console.log("Incorrect password.");
       return {
         statusCode: 400,
         body: JSON.stringify({ message: "Incorrect Password!" }),
@@ -57,7 +73,9 @@ export const handler = async (event) => {
       email: user.email,
       profilePicture: user.profilePicture,
       phoneNumber: user.phone
-    }
+    };
+
+    console.log("Login successful, returning user data:", userData);
 
     // Set the cookie with the JWT token in the response headers
     return {

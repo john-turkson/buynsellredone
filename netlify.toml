@@ -1,6 +1,10 @@
-[functions]
-  directory = "netlify/functions"
+[build]
+  functions = "netlify/functions"
+  publish = "dist"
 
+[functions]
+  node_bundler = "esbuild"
+  directory = "netlify/functions"  # Corrected 'functions' to 'directory' to match Netlify's expected config
 
 [dev]
   framework = "next"
