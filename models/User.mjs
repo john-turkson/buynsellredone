@@ -22,12 +22,16 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  listings: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Listing',
-    default: [],
-  }],
+  listings: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Listing',
+      default: [],
+    },
+  ],
 });
 
-// Exporting the model using ES module export
-export default mongoose.model("User", UserSchema, "Users");
+// Use `mongoose.models` to prevent recompiling the model
+const User = mongoose.models.Users || mongoose.model("Users", UserSchema, "Users");
+
+export default User;

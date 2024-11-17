@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import axios from "axios";
+import { loginUser } from "@/utils/auth-functions";
 
 export const authConfig = {
   pages: {
@@ -21,22 +21,16 @@ export const authConfig = {
           }
 
           // Attempt to login the user
-          const loginUser = axios.post('/api/login-user', credentials)
-
-          if (loginUser.data && loginUser.data.user) {
-            return loginUser.data.user;
-          } else {
-            throw new Error("No user data received. Please try again.");
-          }
+          const user = await loginUser(credentials);
 
           // Check if the user was successfully authenticated
-          // if (user) {
-          //   return user;
-          // } else {
-          //   throw new Error(
-          //     "Invalid credentials. Please check your email and password."
-          //   );
-          // }
+          if (user) {
+            return user;
+          } else {
+            throw new Error(
+              "Invalid credentials. Please check your email and password."
+            );
+          }
         } catch (error) {
           // Log the error for debugging purposes (optional, but recommended)
           console.error("Authorization error:", error);

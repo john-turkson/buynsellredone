@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 import { loginScehma } from "@/utils/yup-schemas";
 import FormField from "@/components/application/FormField";
 import { signIn } from "next-auth/react";
-import { loginUser } from "@/utils/auth-functions";
 
 export default function LoginForm() {
   const onSubmit = async (values) => {

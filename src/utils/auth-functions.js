@@ -61,10 +61,13 @@ export async function uploadImages(files, username) {
   });
 }
 
+const axiosInstance = axios.create({
+  baseURL: process.env.AUTH_URL, // Set the base URL
+});
 
 export async function loginUser(credentials) {
   try {
-    const response = await axios.post("/api/login-user", credentials);
+    const response = await axiosInstance.post("/api/login-user", credentials);
     
     // Check if the response has a user
     if (response.data && response.data.user) {
