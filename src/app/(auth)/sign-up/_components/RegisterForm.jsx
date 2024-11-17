@@ -14,7 +14,7 @@ export default function RegisterForm() {
   const [alertVisible, setAlertVisible] = useState(false);
 
   const onSubmit = async (values, actions) => {
-    console.log("Form Submitted", values);
+    // console.log("Form Submitted", values);
 
     const imageResponse = await uploadProfilePictureToCloudinary(
       values.profilePicture,
@@ -197,7 +197,7 @@ export default function RegisterForm() {
                     Already have an account yet?
                     <Link
                       className="text-purple-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-purple-500 ml-1"
-                      href="/sign-up"
+                      href="/sign-in"
                     >
                       Sign in here
                     </Link>

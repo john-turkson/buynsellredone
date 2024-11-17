@@ -1,7 +1,7 @@
 // Nextjs register-user.js
 
 import mongoose from "mongoose";
-import User from "../../../../models/User.mjs";
+import User from "@/models/User.mjs";
 import { hashPassword } from "@/utils/password-hashing";
 
 const DEFAULT_PROFILE_PICTURE =
