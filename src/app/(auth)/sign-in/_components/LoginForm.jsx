@@ -13,10 +13,7 @@ export default function LoginForm() {
 
     try {
       // Perform the login
-      // signIn("credentials", { ...values, redirectTo: "/account" });
-      const testHello = await fetch("api/hello");
-      const jsonResponse = await testHello.json(); // Await the .json() method
-      console.log(jsonResponse);
+      signIn("credentials", { ...values, redirectTo: "/account" });
     } catch (error) {
       console.error("Login failed:", error);
     }
