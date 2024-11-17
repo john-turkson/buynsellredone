@@ -41,8 +41,8 @@ Before you begin, ensure the following:
 
 ### Things to keep in mind
 
-- These previous serverless functions such as 'login' and 'register' have been moved into the api folder for nextjs
-- All serverless functions will be moved into the api folder and be accessed via the api folder in the src/app directory
-- All env variables will be automatically loaded once the CLI is linked correctly
+- The previous serverless functions such as 'login' and 'register' have been moved into the /api folder for nextjs
+- All serverless functions will be moved into the api folder and be accessed via the /api folder in the ../src/app directory
+- All env variables will be automatically loaded once the CLI is linked correctly, so a .env file in not needed. If other env varibales are need add them via netlify's site
 - To test locally, run the following `netlify dev`
  
