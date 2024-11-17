@@ -61,19 +61,11 @@ export async function uploadImages(files, username) {
   });
 }
 
+
 export async function loginUser(credentials) {
   try {
-    const response = await axios.post(
-      `/.netlify/functions/login-user`,
-      credentials,
-      {
-        headers: {
-          "Content-Type": "application/json", // Specify the content type
-          // Add other custom headers if necessary (e.g., authentication token)
-        },
-      }
-    );
-
+    const response = await axios.post("/netlify-api/login-user", credentials);
+    
     // Check if the response has a user
     if (response.data && response.data.user) {
       return response.data.user;
@@ -93,9 +85,7 @@ export async function loginUser(credentials) {
       // Server responded with a status other than 2xx
       const status = error.response.status;
       if (status === 401) {
-        throw new Error(
-          "Invalid credentials. Please check your email and password."
-        );
+        throw new Error("Invalid credentials. Please check your email and password.");
       } else if (status === 500) {
         throw new Error("Server error. Please try again later.");
       } else {
@@ -103,12 +93,11 @@ export async function loginUser(credentials) {
       }
     } else if (error.request) {
       // Request was made but no response received
-      throw new Error(
-        "Network error. Please check your connection and try again."
-      );
+      throw new Error("Network error. Please check your connection and try again.");
     } else {
       // Other unexpected errors
       throw new Error("An unexpected error occurred. Please try again.");
     }
   }
 }
+

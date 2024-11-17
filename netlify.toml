@@ -1,6 +1,11 @@
 [functions]
   node_bundler = "esbuild"
-  directory = "netlify/functions" 
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/netlify-api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
   
 [dev]
   framework = "next"
