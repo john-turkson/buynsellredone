@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
   const onSubmit = async (values) => {
-    console.log("Form Submitted", values);
+    // console.log("Form Submitted", values);
 
     try {
       // Perform the login

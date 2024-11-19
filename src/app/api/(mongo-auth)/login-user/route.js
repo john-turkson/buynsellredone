@@ -1,6 +1,6 @@
 // Nextjs login-user.js
 
-import User from "../../../../models/User.mjs";
+import User from "@/models/User.mjs";
 import { comparePasswords } from "@/utils/password-hashing";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";

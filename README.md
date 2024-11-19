@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Getting Started to test frontend
 
 First, run the development server:
 
@@ -16,21 +16,33 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+# Testing Locally with Netlify CLI
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This README explains how to set up and use the **Netlify CLI** to test your application locally. The Netlify CLI allows you to run your project in a local environment that closely mimics the Netlify hosting environment, enabling you to test serverless functions, redirects, and more before deploying.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Before you begin, ensure the following:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Node.js and npm installed**  
+   Download and install Node.js from [nodejs.org](https://nodejs.org). npm comes bundled with Node.js.
 
-## Deploy on Vercel
+2. **Netlify CLI installed**  
+   You can install the CLI globally using npm:  
+   ```bash
+   npm install -g netlify-cli
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Initialize Netlify CLI in application**  
+   Once you have installed the CLI, run the following to intialize the CLI in your application with:  
+   ```bash
+   netlify link
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Things to keep in mind
+
+- The previous serverless functions such as 'login' and 'register' have been moved into the /api folder for nextjs
+- All serverless functions will be moved into the api folder and be accessed via the /api folder in the ../src/app directory
+- All env variables will be automatically loaded once the CLI is linked correctly, so a .env file in not needed. If other env varibales are need add them via netlify's site
+- To test locally, run the following `netlify dev`
+ 
