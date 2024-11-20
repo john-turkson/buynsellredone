@@ -1,6 +1,7 @@
 // src/app/profile/[username]/page.jsx
 import { auth } from "@/auth";
-import SideMenu from "./components/SideMenu";
+import SideMenu from "./_components/SideMenu";
+import PersonalInfo from "./_components/PersonalInfo";
 
 export default async function AccountPage() {
   const session = await auth();
@@ -15,8 +16,8 @@ export default async function AccountPage() {
         </div>
 
         {/* <!-- 2/3 column --> */}
-        <div className="w-3/4 p-4 border-l-2">
-          
+        <div className="w-3/4 p-8 border-l-2">
+          <PersonalInfo user={session.user} />
         </div>
       </div>
     </>

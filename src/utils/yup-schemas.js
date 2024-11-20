@@ -19,6 +19,19 @@ export const registrationScehma = Yup.object({
   profilePic: Yup.mixed().nullable(), 
 });
 
+export const editUserName = Yup.object({
+  username: Yup.string().required("Username is Required"),
+});
+
+export const editEmail = Yup.object({
+  email: Yup.string().email("Invalid Email").required("Email is required"),
+});
+
+export const editPhone = Yup.object({
+  phoneNumber: Yup.string()
+    .matches(phoneNumbers, "Invalid Phone Number"),
+});
+
 export const editProfileScehma = Yup.object({
   username: Yup.string(),
   email: Yup.string().email("Invalid Email"),
