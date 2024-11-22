@@ -22,9 +22,11 @@ export default function PersonalInfo({ user }) {
         </button>
       </div>
 
-      <EditProfileField editibleProperty={user.username} inputValue={user.username} />
+      <EditProfileField fieldTitle={'Name'} editibleProperty={user.username} inputValue={user.username} collapseId={'edit-username-collapse'}/>
 
-      {/* <EditProfileField editibleProperty={user.email} inputValue={user.email} /> */}
+      <EditProfileField fieldTitle={'Email'} editibleProperty={user.email} inputValue={user.email} collapseId={'edit-email-collapse'} />
+
+      <EditProfileField fieldTitle={'Phone Number'} editibleProperty={user.phoneNumber} inputValue={user.phoneNumber} collapseId={'edit-phone-collapse'} />
 
     </div>
   );

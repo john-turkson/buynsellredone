@@ -1,12 +1,14 @@
-export default function EditProfileField({ editibleProperty, inputValue }) {
+'use client'
+
+export default function EditProfileField({ fieldTitle, editibleProperty, inputValue, collapseId }) {
     
   return (
     <div className="">
-      <div className="py-5 my-5 border-t border-neutral-400">
+      <div className="py-5 my-3 border-t border-neutral-400">
         {/* Label and Value */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-bold text-gray-300">Name</p>
+            <p className="text-sm font-bold text-gray-300">{fieldTitle}</p>
             <p className="text-sm text-neutral-500">{editibleProperty}</p>
           </div>
 
@@ -17,7 +19,7 @@ export default function EditProfileField({ editibleProperty, inputValue }) {
             id="hs-unstyled-collapse"
             aria-expanded="false"
             aria-controls="hs-unstyled-collapse-heading"
-            data-hs-collapse="#hs-unstyled-collapse-heading"
+            data-hs-collapse={`#${collapseId}`}
           >
             Edit
           </button>
@@ -25,7 +27,7 @@ export default function EditProfileField({ editibleProperty, inputValue }) {
 
         {/* Collapsed Section */}
         <div
-          id="hs-unstyled-collapse-heading"
+          id={collapseId}
           className="hs-collapse hidden w-full overflow-hidden transition-[height] duration-300 mt-2"
           aria-labelledby="hs-unstyled-collapse"
         >
