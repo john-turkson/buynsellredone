@@ -1,6 +1,6 @@
 import { HiMiniUser } from "react-icons/hi2";
 import { HiInboxStack } from "react-icons/hi2";
-
+import { HiOutlineGift } from "react-icons/hi2";
 import SideMenuItem from "./SideMenuItem";
 
 export default function SideMenu() {
@@ -27,6 +27,9 @@ export default function SideMenu() {
           </SideMenuItem>
           <SideMenuItem itemName={"My Listings"}>
             <HiInboxStack />
+          </SideMenuItem>
+          <SideMenuItem itemName={"My Orders"}>
+            <HiOutlineGift />
           </SideMenuItem>
         </ul>
       </nav>

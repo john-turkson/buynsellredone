@@ -1,7 +1,16 @@
+import { auth } from "@/auth";
 
+import PersonalInfo from "./components/PersonalInfo";
 
-export default function AccountInfo() {
+export default async function AccountInfo() {
+  const session = await auth();
+
   return (
-    <div>AccountInfo</div>
-  )
+    <>
+      {/* <!-- 2/3 column --> */}
+      <div className="p-8 border-l-2">
+        <PersonalInfo user={session.user} />
+      </div>
+    </>
+  );
 }
