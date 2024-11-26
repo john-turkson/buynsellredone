@@ -8,14 +8,14 @@ export default function EditProfileField({ fieldTitle, editibleProperty, inputVa
         {/* Label and Value */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-bold text-gray-300">{fieldTitle}</p>
-            <p className="text-sm text-neutral-500">{editibleProperty}</p>
+            <p className="text-sm font-bold dark:text-gray-300">{fieldTitle}</p>
+            <p className="text-sm text-gray-500 dark:text-neutral-300">{editibleProperty}</p>
           </div>
 
           {/* Edit Button */}
           <button
             type="button"
-            className="hs-collapse-toggle text-sm text-neutral-200 hover:underline hover:text-purple-400 focus:outline-none"
+            className="hs-collapse-toggle text-sm dark:text-neutral-200 hover:underline hover:text-purple-400 focus:outline-none"
             id="hs-unstyled-collapse"
             aria-expanded="false"
             aria-controls="hs-unstyled-collapse-heading"
@@ -37,6 +37,7 @@ export default function EditProfileField({ fieldTitle, editibleProperty, inputVa
               type="text"
               className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-purple-500 focus:ring-purple-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
               value={inputValue}
+              readOnly
             />
             <button
               type="button"

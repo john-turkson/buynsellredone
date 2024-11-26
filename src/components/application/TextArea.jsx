@@ -1,7 +1,7 @@
 "use client";
 
-// Reusable FormField component
-export default function FormField({
+// Reusable TextArea component
+export default function TextArea({
   label,
   type = "text",
   id,
@@ -26,7 +26,7 @@ export default function FormField({
           {label}
         </label>
         <div className="relative">
-          <input
+          <textarea
             type={type}
             id={id}
             name={name}
@@ -41,7 +41,7 @@ export default function FormField({
             required={isRequired}
             placeholder={placeholder}
             pattern={pattern}
-          />
+          ></textarea>
           {touched && errors && (
             <div className="absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3">
               <svg

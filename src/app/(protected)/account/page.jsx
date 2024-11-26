@@ -2,6 +2,11 @@
 import { signOut } from "@/auth";
 import { auth } from "@/auth";
 import Image from "next/image";
+import MenuCard from "./components/MenuCard";
+import { HiOutlineUser } from "react-icons/hi";
+import { HiOutlineShoppingBag } from "react-icons/hi";
+import { HiOutlineCollection } from "react-icons/hi";
+
 
 export default async function AccountPage() {
   const session = await auth();
@@ -19,11 +24,11 @@ export default async function AccountPage() {
             {/* Avatar and Info */}
             <div className="flex items-center gap-x-4">
               <Image
-                className="w-[62px] h-[62px] rounded-full object-cover"
+                className="w-[46px] h-[46px] rounded-full object-cover"
                 src={session.user.profilePicture}
                 alt="Avatar"
-                width={62}
-                height={62}
+                width={46}
+                height={46}
               />
               <div>
                 <span className="block text-base font-bold">
@@ -49,11 +54,32 @@ export default async function AccountPage() {
                 Logout
               </button>
             </form>
+          </div>
 
-            
+          {/* Cards Section */}
+          <div className="flex flex-row justify-between mt-4">
+            <MenuCard
+              cardName={'Personal Info'}
+              cardDescription={'Update your details, email preferences, or password'}
+              link={'/account/account-info'}
+              Icon={HiOutlineUser}
+            />
+            <MenuCard
+              cardName={'My Listings'}
+              cardDescription={'View and manage all the items you’ve listed for sale. Update details, track activity, and make changes anytime'}
+              link={'/account/my-listings'}
+              Icon={HiOutlineShoppingBag}
+            />
+            <MenuCard
+              cardName={'My Orders'}
+              cardDescription={'Check the status of your orders or see past orders'}
+              link={'/account/my-orders'}
+              Icon={HiOutlineCollection}
+            />
           </div>
         </div>
       </div>
     </>
   );
+
 }
