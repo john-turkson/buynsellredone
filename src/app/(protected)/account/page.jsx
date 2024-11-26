@@ -7,17 +7,16 @@ import { HiOutlineUser } from "react-icons/hi";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { HiOutlineCollection } from "react-icons/hi";
 
-
 export default async function AccountPage() {
-  const session = await auth();
-  // console.log(session);
+	const session = await auth();
+	// console.log(session);
 
-  return (
-    <>
-      <div className="max-w-[75rem] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="py-20 px-8">
-          {/* Account Header */}
-          <h1 className="text-xl font-semibold">Account</h1>
+	return (
+		<>
+			<div className="max-w-[75rem] mx-auto px-4 sm:px-6 lg:px-8">
+				<div className="py-20 px-8">
+					{/* Account Header */}
+					<h1 className="text-xl font-semibold">Account</h1>
 
           {/* User Info Section */}
           <div className="flex items-center justify-between py-5">
@@ -81,5 +80,4 @@ export default async function AccountPage() {
       </div>
     </>
   );
-
 }
