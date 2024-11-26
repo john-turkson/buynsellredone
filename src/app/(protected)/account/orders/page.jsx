@@ -1,6 +1,14 @@
 import Image from "next/image";
 
 export default function AccountOrders() {
+	useEffect(() => {
+		const fetchOrders = async () => {
+			const response = await axios.get("/api/get-orders", {
+				params: { userId: loggedInUserData.userId },
+			});
+			console.log(response);
+		};
+	});
 	return (
 		<div className="flex items-center justify-center">
 			<div className="flex flex-col items-center space-y-4">
