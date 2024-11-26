@@ -2,7 +2,10 @@
 import { signOut } from "@/auth";
 import { auth } from "@/auth";
 import Image from "next/image";
-import Link from "next/link";
+import MenuCard from "./components/MenuCard";
+import { HiOutlineUser } from "react-icons/hi";
+import { HiOutlineShoppingBag } from "react-icons/hi";
+import { HiOutlineCollection } from "react-icons/hi";
 
 export default async function AccountPage() {
 	const session = await auth();
@@ -15,36 +18,66 @@ export default async function AccountPage() {
 					{/* Account Header */}
 					<h1 className="text-xl font-semibold">Account</h1>
 
-					{/* User Info Section */}
-					<div className="flex items-center justify-between py-5">
-						{/* Avatar and Info */}
-						<div className="flex items-center gap-x-4">
-							<Image className="w-[62px] h-[62px] rounded-full object-cover" src={session.user.profilePicture} alt="Avatar" width={62} height={62} />
-							<div>
-								<span className="block text-base font-bold">{session.user.username}</span>
-								<p className="text-sm font-medium text-neutral-500">{session.user.email}</p>
-							</div>
-						</div>
+          {/* User Info Section */}
+          <div className="flex items-center justify-between py-5">
+            {/* Avatar and Info */}
+            <div className="flex items-center gap-x-4">
+              <Image
+                className="w-[46px] h-[46px] rounded-full object-cover"
+                src={session.user.profilePicture}
+                alt="Avatar"
+                width={46}
+                height={46}
+              />
+              <div>
+                <span className="block text-base font-bold">
+                  {session.user.username}
+                </span>
+                <p className="text-sm font-medium text-neutral-500">
+                  {session.user.email}
+                </p>
+              </div>
+            </div>
 
-						{/* User Orders Link */}
-						<Link href="/account/orders" className="text-sm font-medium text-neutral-500 hover:underline dark:hover:text-white hover:text-gray-800 focus:outline-none">
-							See Orders
-						</Link>
+            {/* Logout Button */}
+            <form
+              action={async () => {
+                "use server";
+                await signOut();
+              }}
+            >
+              <button
+                type="submit"
+                className="text-sm font-medium text-neutral-500 hover:underline dark:hover:text-white hover:text-gray-800 focus:outline-none"
+              >
+                Logout
+              </button>
+            </form>
+          </div>
 
-						{/* Logout Button */}
-						<form
-							action={async () => {
-								"use server";
-								await signOut();
-							}}
-						>
-							<button type="submit" className="text-sm font-medium text-neutral-500 hover:underline dark:hover:text-white hover:text-gray-800 focus:outline-none">
-								Logout
-							</button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</>
-	);
+          {/* Cards Section */}
+          <div className="flex flex-row justify-between mt-4">
+            <MenuCard
+              cardName={'Personal Info'}
+              cardDescription={'Update your details, email preferences, or password'}
+              link={'/account/account-info'}
+              Icon={HiOutlineUser}
+            />
+            <MenuCard
+              cardName={'My Listings'}
+              cardDescription={'View and manage all the items you’ve listed for sale. Update details, track activity, and make changes anytime'}
+              link={'/account/my-listings'}
+              Icon={HiOutlineShoppingBag}
+            />
+            <MenuCard
+              cardName={'My Orders'}
+              cardDescription={'Check the status of your orders or see past orders'}
+              link={'/account/my-orders'}
+              Icon={HiOutlineCollection}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
