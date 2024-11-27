@@ -1,14 +1,22 @@
 import Image from "next/image";
 
-export default function AccountOrders() {
-	useEffect(() => {
-		const fetchOrders = async () => {
-			const response = await axios.get("/api/get-orders", {
-				params: { userId: loggedInUserData.userId },
-			});
-			console.log(response.data);
-		};
-	});
+async function fetchOrders() {
+	try {
+		const response = await axios.get("/api/get-orders", {
+			params: { userId: loggedInUserData.userId },
+		});
+		console.log("Response Data: " + response.data);
+		return response.data.orders || {}; // Return the orders
+	} catch (error) {
+		console.error("Error fetching orders:", error);
+		return null; // Return null on failure
+	}
+}
+
+export default async function AccountOrders({ params }) {
+	const orders = await fetchOrders();
+	console.log("Orders: " + orders);
+
 	return (
 		<div className="flex items-center justify-center">
 			<div className="flex flex-col items-center space-y-4">
