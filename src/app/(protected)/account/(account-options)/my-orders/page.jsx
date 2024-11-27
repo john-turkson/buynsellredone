@@ -1,4 +1,10 @@
 import Image from "next/image";
+import axios from "axios";
+
+// Axios instance with base URL
+const axiosInstance = axios.create({
+	baseURL: process.env.AUTH_URL, // Ensure this is correctly defined in your `.env.local`
+});
 
 async function fetchOrders() {
 	try {
@@ -13,7 +19,7 @@ async function fetchOrders() {
 	}
 }
 
-export default async function MyOrders({ params }) {
+export default async function MyOrders() {
 	const orders = await fetchOrders();
 	console.log("Orders: " + orders);
 
