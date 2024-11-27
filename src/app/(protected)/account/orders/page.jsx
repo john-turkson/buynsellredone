@@ -6,7 +6,7 @@ export default function AccountOrders() {
 			const response = await axios.get("/api/get-orders", {
 				params: { userId: loggedInUserData.userId },
 			});
-			console.log(response);
+			console.log(response.data);
 		};
 	});
 	return (
