@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
-// Create a context for cart
 const CartContext = createContext();
 
 // Custom hook to access the cart context
@@ -11,78 +10,58 @@ export const useCart = () => {
   return useContext(CartContext);
 };
 
-// CartProvider component that will wrap the app to provide cart state
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [username, setUsername] = useState(null);
-  const { data: session } = useSession();  // Get the session data
+  const { data: session } = useSession();
 
-  // Initialize cart only when the component is mounted (on the client side)
+  // Initialize the cart when the user logs in
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Use session.user instead of localStorage for username
-      const user = session?.user?.username || null;  // Access the username from session
+    if (session?.user) {
+      const user = session.user.username;
       setUsername(user);
 
-      if (user) {
-        const savedCart = localStorage.getItem(`cart_${user}`);
-        setCart(savedCart ? JSON.parse(savedCart) : []);
-      }
+      // Load cart from localStorage
+      const savedCart = localStorage.getItem(`cart_${user}`);
+      setCart(savedCart ? JSON.parse(savedCart) : []);
     }
-  }, [session]);  // Re-run the effect if the session changes
+  }, [session]);
 
-  // Sync cart to localStorage whenever the cart changes
+  // Save cart to localStorage when it changes
   useEffect(() => {
-    if (username && cart.length > 0) {
+    if (username) {
       localStorage.setItem(`cart_${username}`, JSON.stringify(cart));
     }
   }, [cart, username]);
 
-  // Add item to cart
   const addToCart = (item) => {
     setCart((prevCart) => {
-      const existingItemIndex = prevCart.findIndex(cartItem => cartItem._id === item._id);
-      let newCart;
-
-      if (existingItemIndex >= 0) {
-        newCart = [...prevCart];
-        newCart[existingItemIndex].quantity += 1;
-      } else {
-        newCart = [...prevCart, { ...item, quantity: 1 }];
-      }
-
-      return newCart;
-    });
-  };
-
-  // Update quantity of an item in the cart
-  const updateCartItemQuantity = (id, newQuantity) => {
-    setCart((prevCart) => {
-      const itemIndex = prevCart.findIndex(item => item._id === id);
-      if (itemIndex !== -1) {
-        const updatedCart = [...prevCart];
-        updatedCart[itemIndex].quantity = newQuantity;
-        return updatedCart;
+      // Add item only if it doesn't already exist in the cart
+      const itemExists = prevCart.some((cartItem) => cartItem._id === item._id);
+      if (!itemExists) {
+        return [...prevCart, item];
       }
       return prevCart;
     });
   };
 
-  // Remove item from the cart
   const removeFromCart = (id) => {
-    setCart((prevCart) => {
-      const updatedCart = prevCart.filter(item => item._id !== id);
-      return updatedCart;
-    });
+    setCart((prevCart) => prevCart.filter((item) => item._id !== id));
   };
 
-  // Get total price of all items in the cart
   const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cart.reduce((total, item) => total + item.price, 0);
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, updateCartItemQuantity, removeFromCart, getTotalPrice }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        getTotalPrice,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

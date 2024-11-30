@@ -15,10 +15,19 @@ async function getListings(userId) {
     // Assuming the response contains the listings in a `listings` field
     return response.data.listings || []; // Ensure that listings is always an array
   } catch (error) {
-    console.error('Error fetching listings:', error);
-    return []; // Return an empty array in case of error
+    if (error.response) {
+      // Check if the error status is 404
+      if (error.response.status === 404) {
+        // console.error('Listings not found (404).');
+        return []; // Return an empty array for a 404 status
+      }
+    }
+    // Log any other errors and return an empty array
+    console.error('Error fetching listings:', error.message || error);
+    return [];
   }
 }
+
 
 export default async function MyListings() {
 
@@ -51,6 +60,7 @@ export default async function MyListings() {
         ) : (
           <p>No listings available</p>
         )}
+        
       </div>
     </div>
   );

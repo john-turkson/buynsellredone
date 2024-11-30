@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import axios from 'axios';
+import AddCart from './components/AddCart';
+import FeaturedImageGallery from './components/FeaturedImageGallery';
 
 // Axios instance with base URL
 const axiosInstance = axios.create({
@@ -32,36 +34,17 @@ export default async function ListingPage({ params }) {
     }
 
     return (
-        <div className="min-h-screen p-6">
-            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Left Section: Images */}
-                <div className="col-span-1">
-                    <div className="flex flex-col gap-4">
-                        {listing.images?.map((image, index) => (
-                            <Image
-                                key={index}
-                                src={image}
-                                alt={`Listing Image ${index + 1}`}
-                                width={200}
-                                height={200}
-                                className="rounded-lg border border-gray-700"
-                            />
-                        ))}
-                    </div>
+        <div className="max-w-[85rem] mx-auto px-4">
+            <div className='flex min-h-screen gap-x-8'>
+                <div className="w-3/4 py-4 px-2 mx-2 mt-4">
+                    {/* Listing Details */}
+                    <FeaturedImageGallery images={listing.images}/>
                 </div>
-
-                {/* Right Section: Details */}
-                <div className="col-span-2">
-                    <h1 className="text-3xl font-bold mb-4">{listing.name}</h1>
-                    <p className="text-gray-400 mb-4">{listing.description}</p>
-                    <span className="text-2xl font-semibold text-purple-500">${listing.price}</span>
-
-                    {/* Add to Cart */}
-                    <div className="mt-8">
-                        <button className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-purple-600 text-white hover:bg-purple-700 focus:outline-none focus:bg-purple-700 disabled:opacity-50 disabled:pointer-events-none">
-                            Add to Cart
-                        </button>
-                    </div>
+                <div className='w-1/4 py-4 px-2 mx-2 mt-4'>
+                    <h1 className='text-2xl font-bold mb-4'>{listing.name}</h1>
+                    <span className="text-xl font-bold text-neutral-400">${listing.price}</span>
+                    <p className="text-gray-400 mt-6">{listing.description}</p>
+                    <AddCart lisitng={listing} />
                 </div>
             </div>
         </div>

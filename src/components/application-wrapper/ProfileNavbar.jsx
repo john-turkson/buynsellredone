@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import Link from "next/link";
 import ThemeSwitch from "../application/ThemeSwitcher";
 import Avatar from "../application/Avatar";
+import SideCart from "../application/side-cart/SideCart";
 
 export default async function ProfileNavbar() {
   const session = await auth();
@@ -28,6 +29,7 @@ export default async function ProfileNavbar() {
             
 
               <ThemeSwitch />
+              <SideCart />
             
               {/* <!-- Button Group --> */}
               <div className="relative flex flex-wrap items-center gap-x-1.5 md:ps-2.5 mt-1 md:mt-0 md:ms-1.5 before:block before:absolute before:top-1/2 before:-start-px before:w-px before:h-4 before:bg-gray-300 before:-translate-y-1/2 dark:before:bg-neutral-700">
