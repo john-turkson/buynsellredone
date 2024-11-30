@@ -1,15 +1,17 @@
+"use client";
 import Image from "next/image";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 // Axios instance with base URL
 const axiosInstance = axios.create({
 	baseURL: process.env.AUTH_URL, // Ensure this is correctly defined in your `.env.local`
 });
 
-async function fetchOrders() {
+async function fetchOrders(userID) {
 	try {
 		const response = await axios.get("/api/get-orders", {
-			params: { userId: loggedInUserData.userId },
+			params: { userId: userID },
 		});
 		console.log("Response Data: " + response.data);
 		return response.data.orders || {}; // Return the orders
@@ -19,8 +21,10 @@ async function fetchOrders() {
 	}
 }
 
-export default async function MyOrders() {
-	const orders = await fetchOrders();
+export default function MyOrders() {
+	const { data: session } = useSession();
+	console.log(session?.user.userId);
+	const orders = fetchOrders(session?.user.userId);
 	console.log("Orders: " + orders);
 
 	return (
