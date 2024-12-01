@@ -11,6 +11,7 @@ async function fetchOrders(userID) {
 	try {
 		const response = await axios.get("/api/get-orders", {
 			params: { userId: userID },
+			headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET" },
 		});
 		console.log("Response Data: " + response.data);
 		return response.data.orders || {}; // Return the orders

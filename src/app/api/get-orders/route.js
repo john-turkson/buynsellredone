@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Order from "@/models/Order.mjs";
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
 
 const connectToDB = async () => {
 	if (mongoose.connection.readyState === 0) {
@@ -30,7 +31,7 @@ export async function GET(req) {
 			return NextResponse.json({ message: "No orders found" }, { status: 404 });
 		}
 
-		return NextResponse.json({ orders }, { status: 200 });
+		return NextResponse.json({ orders }, { status: 200 }, { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET" } });
 	} catch (error) {
 		console.error(error);
 		return NextResponse.json({ message: "Internal server error" }, { status: 500 });
