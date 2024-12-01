@@ -26,6 +26,10 @@ export async function GET(req) {
 		const orders = await Order.find({ buyer: userId });
 		console.log(orders);
 
+		if (orders == null) {
+			return NextResponse.json({ message: "No orders found" }, { status: 404 });
+		}
+
 		return NextResponse.json({ orders }, { status: 200 });
 	} catch (error) {
 		console.error(error);
