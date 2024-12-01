@@ -23,7 +23,6 @@ async function fetchOrders(userID) {
 
 export default function MyOrders() {
 	const { data: session } = useSession();
-	console.log(session?.user.userId);
 	const orders = fetchOrders(session?.user.userId);
 	console.log("Orders: " + orders);
 
