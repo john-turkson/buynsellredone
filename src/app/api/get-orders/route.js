@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import Order from "@/models/Order.mjs";
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
 
 const connectToDB = async () => {
 	if (mongoose.connection.readyState === 0) {
