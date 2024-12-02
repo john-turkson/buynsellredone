@@ -7,9 +7,11 @@ import { useSession } from "next-auth/react"
 import axios from 'axios';
 import FormField from "@/components/application/FormField";
 import TextArea from "@/components/application/TextArea";
+import { useToast } from '@/context/ToastContext';
 
 export default function NewListingForm({ id }) {
 
+    const { addToast } = useToast();
     const { data: session } = useSession()
 
     const [files, setFiles] = useState([]);
@@ -70,7 +72,10 @@ export default function NewListingForm({ id }) {
 			},
 		});
 
+        
         actions.resetForm();
+        closeModal();
+        addToast('Listing created successfully!', 'success')
         setFiles([]);
 
     }
@@ -102,6 +107,14 @@ export default function NewListingForm({ id }) {
             formik.setFieldValue("images", updatedFiles); // Update Formik images array
             return updatedFiles;
         });
+    };
+
+    const closeModal = () => {
+        // Close the modal by manipulating the `data-hs-overlay` attribute
+        const modal = document.querySelector('[data-hs-overlay="#hs-vertically-centered-modal"]');
+        if (modal) {
+            modal.click();  // Trigger the close action by simulating a click event
+        }
     };
 
     return (

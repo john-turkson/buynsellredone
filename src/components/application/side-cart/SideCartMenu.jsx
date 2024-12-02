@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import SideCartItem from "./SideCartItem";
 
 export default function SideCartMenu({ isOpen, onClose }) {
-    const { cart, removeFromCart, getTotalPrice } = useCart();
-    const totalPrice = getTotalPrice();
+    const { cart, removeFromCart, totalPrice } = useCart();
     const router = useRouter();
 
     // Function to handle navigation and close the menu
@@ -70,12 +69,6 @@ export default function SideCartMenu({ isOpen, onClose }) {
                                 className="w-full mt-6 text-md text-gray-800 dark:text-neutral-300 py-3 border rounded-lg border-gray-200 font-semibold hover:bg-gray-200 dark:hover:text-gray-500"
                             >
                                 View Cart ({cart.length})
-                            </button>
-                            <button
-                                onClick={() => handleNavigation("/checkout")}
-                                className="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white py-3 rounded-lg font-semibold transition duration-200"
-                            >
-                                Checkout
                             </button>
                         </div>
                     </div>

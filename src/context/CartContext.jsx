@@ -13,6 +13,8 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [username, setUsername] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalOrderCost, setOrderCost] = useState(0);
   const { data: session } = useSession();
 
   // Initialize the cart when the user logs in
@@ -23,14 +25,23 @@ export const CartProvider = ({ children }) => {
 
       // Load cart from localStorage
       const savedCart = localStorage.getItem(`cart_${user}`);
-      setCart(savedCart ? JSON.parse(savedCart) : []);
+      const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+      setCart(parsedCart);
+
+      // Calculate initial total price
+      const initialTotal = parsedCart.reduce((total, item) => total + item.price, 0);
+      setTotalPrice(initialTotal);
     }
   }, [session]);
 
-  // Save cart to localStorage when it changes
+  // Save cart to localStorage and update total price when the cart changes
   useEffect(() => {
     if (username) {
       localStorage.setItem(`cart_${username}`, JSON.stringify(cart));
+
+      // Update total price
+      const updatedTotal = cart.reduce((total, item) => total + item.price, 0);
+      setTotalPrice(updatedTotal);
     }
   }, [cart, username]);
 
@@ -46,20 +57,29 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = (id) => {
-    setCart((prevCart) => prevCart.filter((item) => item._id !== id));
+    setCart((prevCart) => {
+      // Find the item to be removed
+      const itemToRemove = prevCart.find((item) => item._id === id);
+      
+      // Update the order cost only if the item exists in the cart
+      if (itemToRemove && totalOrderCost > 0) {
+        setOrderCost(totalOrderCost - itemToRemove.price);
+      }
+  
+      // Remove the item from the cart
+      return prevCart.filter((item) => item._id !== id);
+    });
   };
-
-  const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.price, 0);
-  };
-
+  
   return (
     <CartContext.Provider
       value={{
         cart,
+        totalPrice, // Provide totalPrice to the context
+        totalOrderCost, // Provide totalOrderCost to the context
+        setOrderCost,
         addToCart,
         removeFromCart,
-        getTotalPrice,
       }}
     >
       {children}

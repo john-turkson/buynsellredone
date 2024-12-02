@@ -1,14 +1,15 @@
 'use client'
 import { useCart } from '@/context/CartContext';
-
+import { useToast } from '@/context/ToastContext';
 
 export default function AddCart({ lisitng }) {
 
+    const { addToast } = useToast();
     const { addToCart } = useCart();
 
     const handleAddToCart = () => {
         addToCart(lisitng);
-        alert(`${lisitng.name} has been added to your cart.`);
+        addToast(`${lisitng.name} has been added to your cart.`, 'info');
       };
 
     return (
