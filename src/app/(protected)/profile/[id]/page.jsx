@@ -62,7 +62,7 @@ export default async function ProfilePage({ params }) {
     return (
         <div className="max-w-[85rem] mx-auto px-4">
             <div className="flex items-center justify-between">
-                <h1 className="text-xl font-semibold mb-6 pt-6">{user.username}'s  Catalogue</h1>
+                <h1 className="text-xl font-semibold mb-6 pt-6">{user.username}&apos;s  Catalogue</h1>
             </div>
             <div className="flex flex-wrap justify-between gap-4 pt-6 pb-12">
                 {listings.length > 0 ? (

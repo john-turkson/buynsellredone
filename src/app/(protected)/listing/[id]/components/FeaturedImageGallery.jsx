@@ -1,5 +1,6 @@
 'use client'
 
+import Image from "next/image";
 import { useState } from "react";
 
 export default function FeaturedImageGallery({ images }) {
@@ -9,10 +10,13 @@ export default function FeaturedImageGallery({ images }) {
         <div className="max-w-5xl mx-auto p-4">
             {/* Featured Image */}
             <div className="aspect-w-16 aspect-h-9 mb-4">
-                <img
+                <Image
                     src={selectedImage}
                     alt="Featured"
+                    width={1000}
+                    height={700}
                     className="w-[1000px] h-[700px] object-cover rounded-lg shadow-lg"
+                    unoptimized
                 />
             </div>
 
