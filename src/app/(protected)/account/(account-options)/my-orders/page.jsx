@@ -16,6 +16,10 @@ async function fetchOrders(userID) {
 		return response.data.orders || {}; // Return the orders
 	} catch (error) {
 		console.error("Error fetching orders:", error);
+		if (error.response.status === 404) {
+			// no orders
+			return []; // Return an empty array for a 404 status
+		}
 		return null; // Return null on failure
 	}
 }
@@ -66,13 +70,9 @@ export default async function MyOrders() {
 		);
 	}
 
-	if (orderCards.length === 0) {
-		orderCards = "You have not made any orders";
-	}
-
 	return (
 		<div className="flex items-center justify-center">
-			<div className="flex flex-col items-center space-y-4">{orderCards}</div>
+			<div className="flex flex-col items-center space-y-4">{orderCards.length > 0 ? orderCards : <p>You have not made any orders</p>}</div>
 		</div>
 	);
 }
