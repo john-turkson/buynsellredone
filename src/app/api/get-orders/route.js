@@ -13,6 +13,7 @@ export async function GET(req) {
 		// Parse the query string to get the userId
 		const { searchParams } = new URL(req.url);
 		const userId = searchParams.get("userId");
+		console.log(userId);
 
 		// Validate userId
 		if (!userId) {
@@ -25,7 +26,7 @@ export async function GET(req) {
 		const orders = await Order.find({ buyer: userId });
 		console.log(orders);
 
-		if (orders.length === 0) {
+		if (orders == null) {
 			return NextResponse.json({ message: "No orders found" }, { status: 404 });
 		}
 
