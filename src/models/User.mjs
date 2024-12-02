@@ -29,6 +29,13 @@ const UserSchema = new mongoose.Schema({
       default: [],
     },
   ],
+  orders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+      default: [],
+    },
+  ],
 });
 
 // Use `mongoose.models` to prevent recompiling the model

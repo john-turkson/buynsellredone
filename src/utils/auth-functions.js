@@ -7,7 +7,7 @@ export const uploadProfilePictureToCloudinary = async (image, username) => {
   imageFormData.append("file", image);
   imageFormData.append(
     "upload_preset",
-    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+    process.env.NEXT_PUBLIC_PROFILE_PICTURE_UPLOAD_PRESET
   );
   imageFormData.append("folder", `Users/${username}/Images`);
   imageFormData.append("public_id", `profilePicture`);

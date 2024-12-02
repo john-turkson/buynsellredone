@@ -19,6 +19,19 @@ export const registrationScehma = Yup.object({
   profilePic: Yup.mixed().nullable(), 
 });
 
+export const editUserName = Yup.object({
+  username: Yup.string().required("Username is Required"),
+});
+
+export const editEmail = Yup.object({
+  email: Yup.string().email("Invalid Email").required("Email is required"),
+});
+
+export const editPhone = Yup.object({
+  phoneNumber: Yup.string()
+    .matches(phoneNumbers, "Invalid Phone Number"),
+});
+
 export const editProfileScehma = Yup.object({
   username: Yup.string(),
   email: Yup.string().email("Invalid Email"),
@@ -74,3 +87,12 @@ export const editProfileSchema = {
       .oneOf([Yup.ref("password"), null], "Passwords must match"),
   }),
 };
+
+export const addNewListingSchema = Yup.object({
+  name: Yup.string().required('Name is required'),
+  description: Yup.string().required('Description is required'),
+  price: Yup.number().required('Price is required'),
+  images: Yup.array()
+        .min(1, 'At least one image is required') // Ensures the array has at least one item
+        .required('Listing Image(s) is required'), // Ensures the array itself is provided
+});

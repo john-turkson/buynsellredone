@@ -5,6 +5,7 @@ import ThemeWrapper from "./theme-wrapper";
 import NavbarSelector from "@/components/application-wrapper/NavbarSelector";
 import PrelineScript from "@/components/PrelineScript";
 import SessionWrapper from "@/context/SessionWrapper";
+import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/application-wrapper/Navbar";
 import MainContent from "@/components/application-wrapper/MainContent";
 
@@ -31,13 +32,13 @@ export default function RootLayout({ children }) {
         <body
           className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`}
         >
-          <ThemeWrapper>
-            <NavbarSelector />
-            <MainContent>
-              {children}
-            </MainContent>
-            <Footer />
-          </ThemeWrapper>
+          <CartProvider>
+            <ThemeWrapper>
+              <NavbarSelector />
+              <MainContent>{children}</MainContent>
+              <Footer />
+            </ThemeWrapper>
+          </CartProvider>
         </body>
       </SessionWrapper>
       <PrelineScript />

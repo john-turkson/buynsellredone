@@ -25,10 +25,11 @@ const listingSchema = new mongoose.Schema(
         message: () => "Please provide at least one image URL",
       },
     },
-    location: { type: String, required: [true, "Location is required"] },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // reference to User
   },
   { collection: "Listings" }
 );
 
-export default mongoose.model("Listing", listingSchema);
+const Listing = mongoose.models.Listing || mongoose.model("Listing", listingSchema);
+
+export default Listing
