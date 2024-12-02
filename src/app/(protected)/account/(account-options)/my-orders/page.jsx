@@ -66,6 +66,10 @@ export default async function MyOrders() {
 		);
 	}
 
+	if (orderCards.length === 0) {
+		orderCards = "You have not made any orders";
+	}
+
 	return (
 		<div className="flex items-center justify-center">
 			<div className="flex flex-col items-center space-y-4">{orderCards}</div>

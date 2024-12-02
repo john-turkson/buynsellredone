@@ -22,7 +22,7 @@ export async function GET(req) {
 		// Initiate MongoDB Connection
 		await connectToDB();
 
-		const orders = await Order.find({ buyer: userId });
+		const orders = await Order.find({ buyer: userId }).sort({ orderDate: "desc" });
 		console.log(orders);
 
 		if (orders == null) {
