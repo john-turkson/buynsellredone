@@ -4,20 +4,15 @@ import { useEffect, useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import StripeCheckoutForm from './components/StripeCheckoutForm';
-import Link from 'next/link';
 import OrderSummaryField from './components/OrderSummaryField';
 import CartItem from './components/CartItem';
 import ShippingDropdown from './components/ShippingDropdown';
 import { useRouter } from "next/navigation";
 import PaymentConfirmModal from './components/PaymentConfirmModal';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 export default function CartPage() {
   const { cart, removeFromCart, totalPrice } = useCart();
-  const [user, setUser] = useState(null);
-  const [clientSecret, setClientSecret] = useState('');
   const [checkout, setCheckout] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [shippingPrice, setShippingPrice] = useState(null);
@@ -118,27 +113,10 @@ export default function CartPage() {
                 </div>
                 <p className='text-sm font-medium'>{`$${totalCheckoutAmount}`}</p>
             </div>
-          {/* <button
-            onClick={() => setCheckout(true)}
-            className="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white py-3 rounded-lg font-semibold shadow-sm transition duration-200"
-          >
-            Proceed to Checkout
-          </button> */}
           <PaymentConfirmModal orderAmount={totalCheckoutAmount} />
 
         </div>
       </div>
-
-      {checkout && clientSecret && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="p-8 rounded-lg shadow-lg w-full max-w-3xl mx-auto bg-neutral-50 dark:bg-neutral-800">
-            <h2 className="text-2xl font-medium text-center mb-4 dark:text-white">Complete Your Purchase</h2>
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <StripeCheckoutForm clientSecret={clientSecret} onClose={handleCloseCheckout} />
-            </Elements>
-          </div>
-        </div>
-      )}
 
     </div>
   );
