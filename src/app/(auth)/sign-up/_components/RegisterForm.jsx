@@ -1,17 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
 import FormField from "../../../../components/application/FormField";
 import FileInput from "./FileInput";
 import { useFormik } from "formik";
 import axios from "axios";
 import { registrationScehma } from "@/utils/yup-schemas";
-import SuccessAlert from "@/components/application/SuccessAlert";
 import { uploadProfilePictureToCloudinary } from "@/utils/auth-functions";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
-  const [alertVisible, setAlertVisible] = useState(false);
+
+  const router = useRouter();
 
   const onSubmit = async (values, actions) => {
     // console.log("Form Submitted", values);
@@ -33,7 +33,7 @@ export default function RegisterForm() {
     //Send User Data to MongoDB
     try {
       const response = await axios.post(
-        ".netlify/functions/register-user",
+        "./api/register-user",
         profileData,
         {
           headers: {
@@ -43,7 +43,7 @@ export default function RegisterForm() {
       );
 
       if (response.status === 201) {
-        setAlertVisible(true);
+        router.push('/sign-in');
         actions.resetForm();
       }
     } catch (error) {
@@ -209,11 +209,6 @@ export default function RegisterForm() {
           </div>
         </div>
       </div>
-
-      <SuccessAlert
-        message="Account created successfully!"
-        hidden={!alertVisible}
-      />
     </>
   );
 }

@@ -1,6 +1,9 @@
 import Link from "next/link";
 
 export default function HeroSection() {
+
+
+
   return (
     <div className="relative overflow-hidden">
       {/* Gradients */}
@@ -38,7 +41,7 @@ export default function HeroSection() {
             <div className="mt-8 gap-3 flex justify-center">
               <Link
                 className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-purple-600 text-white hover:bg-purple-700 focus:outline-none focus:bg-purple-700 disabled:opacity-50 disabled:pointer-events-none"
-                href="/sign-up"
+                href="/shop-listings"
               >
                 Get started
                 <svg
