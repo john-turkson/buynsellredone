@@ -39,28 +39,36 @@ async function getListings(listingIDs) {
 export default async function MyOrders() {
 	const session = await auth();
 	const orders = await fetchOrders(session?.user.userId);
-	const listings = await getListings(orders[0].listings);
-	let listingCards = [];
-	for (let i = 0; i < listings.length; i++) {
-		listingCards.push(
-			<div className="grid grid-cols-2 grid-rows-2 gap-4 border-2 rounded p-2">
-				<Image src={listings[i].images[0]} alt="Image" width={200} height={200} className="row-span-2" />
-				<div className="font-bold">{listings[i].name}</div>
-				<div>${listings[i].price}</div>
+
+	let orderCards = [];
+	for (let i = 0; i < orders.length; i++) {
+		//get listing info for reach order and create cards
+		const listings = await getListings(orders[i].listings);
+		let listingCards = [];
+		for (let j = 0; j < listings.length; j++) {
+			listingCards.push(
+				<div className="grid grid-cols-2 grid-rows-2 gap-4 border-2 rounded p-2">
+					<Image src={listings[j].images[0]} alt="Image" width={200} height={200} className="row-span-2" />
+					<div className="font-bold">{listings[j].name}</div>
+					<div>${listings[j].price}</div>
+				</div>
+			);
+		}
+
+		//create order cards with order-specific info
+		orderCards.push(
+			<div className="flex flex-col items-center space-y-4 border-2 p-2">
+				<div className="text-left">{orders[i].orderDate.substr(0, 10)}</div>
+				{listingCards}
+				<div className="font-bold text-left">Total: ${orders[i].totalAmount}</div>
+				<div className="text-left">Status: {orders[i].status}</div>
 			</div>
 		);
 	}
 
 	return (
 		<div className="flex items-center justify-center">
-			<div className="flex flex-col items-center space-y-4">
-				<div className="flex flex-col items-center space-y-4 border-2 p-2">
-					<div className="text-left">{orders[0].orderDate.substr(0, 10)}</div>
-					{listingCards}
-					<div className="font-bold text-left">Total: ${orders[0].totalAmount}</div>
-					<div className="text-left">Status: {orders[0].status}</div>
-				</div>
-			</div>
+			<div className="flex flex-col items-center space-y-4">{orderCards}</div>
 		</div>
 	);
 }
