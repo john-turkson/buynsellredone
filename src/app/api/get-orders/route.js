@@ -13,7 +13,6 @@ export async function GET(req) {
 		// Parse the query string to get the userId
 		const { searchParams } = new URL(req.url);
 		const userId = searchParams.get("userId");
-		console.log(userId);
 
 		// Validate userId
 		if (!userId) {
