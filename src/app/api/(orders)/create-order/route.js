@@ -4,38 +4,42 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
 	try {
-		// Parse the query string to get the userId
-		// const { name, price, description, location, images, userId } = await req.json();
+		// Parse the query string
+		const { buyer, listings, totalAmount, orderDate, status, paymentMethod, shippingAddress } = await req.json();
 
 		// Initiate MongoDB Connection
 		if (!mongoose.connection.readyState) {
-			await mongoose.connect(process.env.MONGODB_URI, {
-				dbName: "Main",
-			});
+			await mongoose.connect(process.env.MONGODB_URI, { dbName: "Main" });
 		}
 
 		// check if user exists
-		const existingUser = await User.findById(userId).exec();
+		const existingUser = await User.findById(buyer).exec();
 		if (!existingUser) {
-			return NextResponse.json(
-				{ message: "User cannot be found!" },
-				{
-					status: 400,
-					headers: {
-						"Access-Control-Allow-Origin": "*",
-					},
-				}
-			);
+			return NextResponse.json({ message: "Buyer cannot be found!" }, { status: 400, headers: { "Access-Control-Allow-Origin": "*" } });
 		}
 
-		return NextResponse.json(response, {
-			status: 200,
-			headers: {
-				"Access-Control-Allow-Origin": "*",
-			},
+		// Create the new order in the database
+		const newOrder = new Order({
+			buyer,
+			listings,
+			totalAmount,
+			orderDate,
+			status,
+			paymentMethod,
+			shippingAddress,
 		});
+
+		await newOrder.save(); // Save the listing in MongoDB
+
+		// Construct response
+		const response = {
+			message: "Order made successfully",
+			order: newOrder, // Return the newly created order
+		};
+
+		return NextResponse.json(response, { status: 200, headers: { "Access-Control-Allow-Origin": "*" } });
 	} catch (error) {
 		console.error(error);
-		return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+		return NextResponse.json({ message: "Error creating order!" }, { status: 500 });
 	}
 }
