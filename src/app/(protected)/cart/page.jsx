@@ -4,18 +4,33 @@ import { useEffect, useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import StripeCheckoutForm from './components/StripeCheckoutForm';
+import OrderSummaryField from './components/OrderSummaryField';
+import CartItem from './components/CartItem';
+import ShippingDropdown from './components/ShippingDropdown';
+import { useRouter } from "next/navigation";
+import PaymentConfirmModal from './components/PaymentConfirmModal';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 export default function CartPage() {
-  const { cart, updateCartItemQuantity, removeFromCart, getTotalPrice } = useCart();
-  const [user, setUser] = useState(null);
-  const [clientSecret, setClientSecret] = useState('');
-  const [checkout, setCheckOut] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState('Canada');
-  const [shippingPrice, setShippingPrice] = useState(15);
+  const { cart, removeFromCart, totalPrice } = useCart();
+  const [checkout, setCheckout] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [shippingPrice, setShippingPrice] = useState(null);
 
+  
+  const totalTax = parseFloat((totalPrice * 0.13).toFixed(2));
+  const totalCheckoutAmount = shippingPrice + totalTax + totalPrice
+
+  const router = useRouter();
+
+  // Calculate shipping price based on selected country
+  const shippingPrices = {
+    'CA': 15,
+    'US': 20,
+    'GB': 25,
+  };
+
+  // User initialization from localStorage
   useEffect(() => {
     const userDetails = localStorage.getItem('userDetails');
     if (userDetails) {
@@ -23,155 +38,86 @@ export default function CartPage() {
     }
   }, []);
 
-  useEffect(() => {
-    // Update the shipping price based on the selected country
-    const shippingPrices = {
-      Canada: 15,
-      'United States': 20,
-      'United Kingdom': 25,
-    };
-    setShippingPrice(shippingPrices[selectedCountry] || 15);
-  }, [selectedCountry]);
+  // Update shipping price based on country
+  const handleCountryChange = (country) => {
+    setSelectedCountry(country);
+    // Set the shipping price based on the selected country
+    if (country) {
+      setShippingPrice(shippingPrices[country]);
+    } else {
+      setShippingPrice(null); // Reset shipping price if no country is selected
+    }
+  };
 
+  // Create payment intent when checkout is triggered
   useEffect(() => {
+    if (!checkout) return;
+
     const fetchPaymentIntent = async () => {
-      // Calculate total amount including updated shipping price
-      const totalAmount = getTotalPrice() + shippingPrice;
+      const totalAmount = totalCheckoutAmount;
 
-      // Call the API route to create a PaymentIntent
       const response = await fetch('/api/payment-intent', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ amount: totalAmount * 100 }), // Amount is in cents
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: totalAmount * 100 }), // Stripe expects cents
       });
 
       const data = await response.json();
-      setClientSecret(data.clientSecret); // Get the client secret from the backend
+      setClientSecret(data.clientSecret);
     };
 
-    if (checkout) {
-      fetchPaymentIntent();
-    }
-  }, [checkout, getTotalPrice, shippingPrice]);
+    fetchPaymentIntent();
+  }, [checkout, totalCheckoutAmount]);
 
-  const handleQuantityChange = (id, newQuantity) => {
-    if (newQuantity >= 1) {
-      updateCartItemQuantity(id, newQuantity);
-    }
-  };
 
-  const totalProducts = getTotalPrice();
-  const totalPrice = totalProducts + shippingPrice;
-
-  const handleClose = () => {
-    setCheckOut(false);
-  };
+  const handleCloseCheckout = () => setCheckout(false);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 p-4 sm:p-8 dark:text-white min-h-screen">
-      {/* Left: Cart Items */}
-      <div className="cart__left p-4 sm:p-8 rounded-lg shadow-lg dark:bg-neutral-900 bg-neutral-100">
-        <div className="cart__content">
-          <h1 className="text-2xl sm:text-4xl my-4 sm:my-8 font-medium text-center dark:text-white">
-            Shopping Cart
-          </h1>
-          <p className="text-center">
-            {cart.length > 0 ? `${cart.length} products in cart` : 'No products in cart.'}
-          </p>
-          <ul className="divide-y divide-gray-300 space-y-4">
-            {cart.map((item) => (
-              <li key={item._id} className="flex flex-col sm:flex-row justify-between items-center py-4">
-                <div className="flex items-center space-x-4">
-                  <img
-                    src="https://img.uline.com/is/image/uline/H-4568?$Mobile_Zoom$"
-                    alt={item.name}
-                    className="w-16 h-16 object-cover rounded-lg shadow-md"
-                  />
-                  <div>
-                    <h3 className="text-lg font-medium dark:text-white">{item.name}</h3>
-                    <div className="flex items-center mt-2">
-                      <label className="text-sm dark:text-white">Qty:</label>
-                      <input
-                        type="number"
-                        min="1"
-                        value={item.quantity}
-                        onChange={(e) => handleQuantityChange(item._id, parseInt(e.target.value))}
-                        className="ml-2 w-16 dark:text-black border border-gray-300 rounded p-1 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-6 mt-4 sm:mt-0">
-                  <p className="font-price font-semibold dark:text-white">
-                    ${(item.price * item.quantity).toFixed(2)}
-                  </p>
-                  <button
-                    onClick={() => removeFromCart(item._id)}
-                    className="dark:text-red hover:text-red-500 transition duration-150"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        {/* Shipping Country Dropdown */}
-        <div className="flex justify-between items-center">
-          <p className="font-medium dark:text-white">Select Shipping Country</p>
-          <select
-            value={selectedCountry}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-            className="border border-gray-300 rounded p-2 dark:text-black"
-            required
-          >
-            <option value="Canada">Canada</option>
-            <option value="United States">United States</option>
-            <option value="United Kingdom">United Kingdom</option>
-          </select>
-        </div>
-      </div>
+    <div className="max-w-[85rem] mx-auto px-4">
+      <div className='flex min-h-screen gap-x-16'>
+        <div className='w-3/4 py-4 px-2 mx-2 mt-4'>
+          <h1 className="text-xl font-semibold mb-6">Shopping Cart</h1>
+          {cart.map((item, index) => (
+            <CartItem item={item} key={index} remove={removeFromCart} />
+          ))}
 
-      {/* Right: Order Summary */}
-      <div className="cart__right p-4 sm:p-8 rounded-lg shadow-lg flex flex-col justify-center h-full dark:bg-neutral-950 bg-neutral-200">
-        <div className="cart__content space-y-4">
-          <div className="flex justify-between">
-            <p className="font-medium dark:text-white">Products in cart</p>
-            <p className="font-price dark:text-white">${totalProducts.toFixed(2)}</p>
-          </div>
-          <div className="flex justify-between">
-            <p className="font-medium dark:text-white">Shipping</p>
-            <p className="font-price dark:text-white">${shippingPrice.toFixed(2)}</p>
-          </div>
-
-          <div className="border-t border-gray-300 my-4"></div>
-          <div className="flex justify-between">
-            <p className="text-2xl font-bold dark:text-white">Total</p>
-            <p className="text-2xl font-price dark:text-white">${totalPrice.toFixed(2)}</p>
-          </div>
-          {totalProducts > 0 && (
-            <button
-              className="w-full mt-6 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-semibold shadow-lg transition duration-200"
-              onClick={() => setCheckOut(true)} // Trigger checkout
-            >
-              Proceed to Checkout
-            </button>
+          {cart.length > 0 ? (
+            <p className="text-right text-neutral-500">{`Items in cart: ${cart.length}`}</p>
+          ) : (
+            <p className="text-center text-neutral-500">No Items in cart.</p>
           )}
+
+        </div>
+        <div className='w-1/4 py-4 px-2 mx-2 mt-4'>
+          <h1 className='text-lg font-semibold mb-1'>Order Summary</h1>
+          <OrderSummaryField fieldName={'Subtotal'} fieldValue={`$${totalPrice}`} />
+          <div className='flex items-center justify-between pt-4'>
+            <div>
+              <p className='text-sm font-medium'>Shipping</p>
+              
+            </div>
+            {selectedCountry != null ? (<p className='text-sm font-medium'>{`$${shippingPrice}`}</p>) : (<ShippingDropdown onCountryChange={handleCountryChange} />)}
+          </div>
+          {selectedCountry !== null && (
+                <p
+                  onClick={() => setSelectedCountry(null)}
+                  className="text-neutral-400 dark:text-neutral-400 pb-2 underline cursor-pointer text-xs hover:text-purple-500 transition duration-150"
+                >
+                  Clear
+                </p>
+              )}
+          <OrderSummaryField fieldName={'Estimated Tax'} fieldValue={`$${totalTax}`} />
+          <div className='flex items-center justify-between pt-4'>
+                <div>
+                    <p className='text-sm font-medium'>Total</p>
+                </div>
+                <p className='text-sm font-medium'>{`$${totalCheckoutAmount}`}</p>
+            </div>
+          <PaymentConfirmModal orderAmount={totalCheckoutAmount} />
+
         </div>
       </div>
 
-      {checkout && clientSecret && (
-        <div className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="p-8 rounded-lg shadow-lg w-full max-w-3xl mx-auto bg-neutral-50 dark:bg-neutral-800">
-            <h2 className="text-2xl font-medium text-center mb-4 dark:text-white">Complete Your Purchase</h2>
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <StripeCheckoutForm clientSecret={clientSecret} onClose={handleClose} />
-            </Elements>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

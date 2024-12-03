@@ -30,19 +30,22 @@ Before you begin, ensure the following:
    Download and install Node.js from [nodejs.org](https://nodejs.org). npm comes bundled with Node.js.
 
 2. **Netlify CLI installed**  
-   You can install the CLI globally using npm:  
-   ```bash
-   npm install -g netlify-cli
+   You can install the CLI globally using npm:
+
+    ```bash
+    npm install -g netlify-cli
+
+    ```
 
 3. **Initialize Netlify CLI in application**  
-   Once you have installed the CLI, run the following to intialize the CLI in your application with:  
-   ```bash
-   netlify link
+   Once you have installed the CLI, run the following to initialize the CLI in your application with:
+    ```bash
+    netlify link
+    ```
 
 ### Things to keep in mind
 
-- The previous serverless functions such as 'login' and 'register' have been moved into the /api folder for nextjs
-- All serverless functions will be moved into the api folder and be accessed via the /api folder in the ../src/app directory
-- All env variables will be automatically loaded once the CLI is linked correctly, so a .env file in not needed. If other env varibales are need add them via netlify's site
-- To test locally, run the following `netlify dev`
- 
+-   The previous serverless functions such as 'login' and 'register' have been moved into the /api folder for nextjs
+-   All serverless functions will be moved into the api folder and be accessed via the /api folder in the ../src/app directory
+-   All env variables will be automatically loaded once the CLI is linked correctly, so a .env file in not needed. If other env variables are need add them via netlify's site
+-   To test locally, run the following `netlify dev`

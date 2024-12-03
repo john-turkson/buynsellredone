@@ -1,16 +1,28 @@
 import axios from "axios";
 
-export const uploadProfilePictureToCloudinary = async (image, username) => {
+const axiosInstance = axios.create({
+  baseURL: process.env.AUTH_URL, // Set the base URL
+});
+
+
+export const uploadProfilePictureToCloudinary = async (image, userId) => {
   const imageFormData = new FormData();
+
+  // Generate a unique ID for the image
+  const fileUploadInfo = await axiosInstance.get('/api/create-signature', {
+    params: { folder: `Users/${userId}/Images` },
+  });
+
+  console.log(fileUploadInfo.data);
 
   // Append the necessary data for Cloudinary upload
   imageFormData.append("file", image);
-  imageFormData.append(
-    "upload_preset",
-    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-  );
-  imageFormData.append("folder", `Users/${username}/Images`);
-  imageFormData.append("public_id", `profilePicture`);
+  imageFormData.append("public_id", fileUploadInfo.data.public_id);
+  imageFormData.append("signature", fileUploadInfo.data.signature);
+  imageFormData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
+  imageFormData.append("timestamp", fileUploadInfo.data.timestamp);
+  imageFormData.append("eager", fileUploadInfo.data.eager);
+  imageFormData.append("folder", `Users/${userId}/Images`);
 
   try {
     // Upload the image to Cloudinary
@@ -23,9 +35,10 @@ export const uploadProfilePictureToCloudinary = async (image, username) => {
     );
 
     const data = await response.json();
+    
 
     // Return the secure URL of the uploaded image
-    return data.secure_url;
+    return data.eager[0].secure_url;
   } catch (error) {
     console.error("Upload failed:", error);
     return null;
@@ -61,9 +74,6 @@ export async function uploadImages(files, username) {
   });
 }
 
-const axiosInstance = axios.create({
-  baseURL: process.env.AUTH_URL, // Set the base URL
-});
 
 export async function loginUser(credentials) {
   try {

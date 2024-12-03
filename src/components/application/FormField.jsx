@@ -17,7 +17,7 @@ export default function FormField({
   isRequired = false,
 }) {
   return (
-    <div className="max-w-sm space-y-4">
+    <div className="max-w-full space-y-4">
       <div>
         <label
           htmlFor={id} // Set to match the input `id`
