@@ -38,8 +38,6 @@ export const editProfileScehma = Yup.object({
   password: Yup.string()
     .min(8)
     .matches(passwordRules, "Password must contain one letter or number"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match"),
   phoneNumber: Yup.string()
     .matches(phoneNumbers, "Invalid Phone Number"),
   profilePic: Yup.mixed().nullable(), 

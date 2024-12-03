@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 
 import PersonalInfo from "../components/PersonalInfo";
+import InfoEdit from "../components/InfoEdit";
 
 export default async function AccountInfo() {
   const session = await auth();
@@ -8,8 +9,9 @@ export default async function AccountInfo() {
   return (
     <>
       {/* <!-- 2/3 column --> */}
-      <div className="p-8">
-        <PersonalInfo user={session.user} />
+      <div className="mx-4">
+        {/* <PersonalInfo user={session.user} /> */}
+        <InfoEdit user={session?.user} />
       </div>
     </>
   );

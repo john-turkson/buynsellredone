@@ -1,8 +1,8 @@
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import axios from 'axios';
 import AddCart from './components/AddCart';
 import FeaturedImageGallery from './components/FeaturedImageGallery';
+import { auth } from '@/auth';
 
 // Axios instance with base URL
 const axiosInstance = axios.create({
@@ -25,6 +25,7 @@ async function getListing(listingId) {
 // Dynamic Page Component
 export default async function ListingPage({ params }) {
 
+    const session = await auth();
     const { id: listingId } = await params; // Await params to avoid accessing undefined properties
     const listing = await getListing(listingId);
 
@@ -32,6 +33,8 @@ export default async function ListingPage({ params }) {
         // Handle 404 if listing is not found
         return notFound();
     }
+
+    const isOwner = listing.user === session?.user?.userId
 
     return (
         <div className="max-w-[85rem] mx-auto px-4">
@@ -42,9 +45,9 @@ export default async function ListingPage({ params }) {
                 </div>
                 <div className='w-1/4 py-4 px-2 mx-2 mt-4'>
                     <h1 className='text-2xl font-bold mb-4'>{listing.name}</h1>
-                    <span className="text-xl font-bold text-neutral-400">${listing.price}</span>
-                    <p className="text-gray-400 mt-6">{listing.description}</p>
-                    <AddCart lisitng={listing} />
+                    <span className="text-xl font-bold dark:text-neutral-400">${listing.price}</span>
+                    <p className="text-gray-800 dark:text-gray-300 mt-6">{listing.description}</p>
+                    {!isOwner ? (<AddCart lisitng={listing} />) : (<button className="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white py-3 rounded-lg font-semibold shadow-sm transition duration-200 >Edit Button</button>)">Edit Listing</button>)}
                 </div>
             </div>
         </div>

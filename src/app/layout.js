@@ -8,6 +8,7 @@ import SessionWrapper from "@/context/SessionWrapper";
 import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/application-wrapper/Navbar";
 import MainContent from "@/components/application-wrapper/MainContent";
+import { ToastProvider } from "@/context/ToastContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,13 +33,15 @@ export default function RootLayout({ children }) {
         <body
           className={`${geistSans.variable} ${geistMono.variable} flex flex-col min-h-screen`}
         >
-          <CartProvider>
-            <ThemeWrapper>
-              <NavbarSelector />
-              <MainContent>{children}</MainContent>
-              <Footer />
-            </ThemeWrapper>
-          </CartProvider>
+         <ToastProvider>
+            <CartProvider>
+              <ThemeWrapper>
+                <NavbarSelector />
+                <MainContent>{children}</MainContent>
+                <Footer />
+              </ThemeWrapper>
+            </CartProvider>
+         </ToastProvider>
         </body>
       </SessionWrapper>
       <PrelineScript />

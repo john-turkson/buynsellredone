@@ -27,7 +27,7 @@ export default async function ProfileNavbar() {
           <div className="overflow-hidden overflow-y-auto max-h-[75vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
             <div className="py-2 md:py-0 flex flex-col md:flex-row md:items-center md:justify-end gap-0.5 md:gap-1">
             
-
+              <Link className="p-2 flex items-center text-sm text-purple-800 hover:text-purple-500 focus:outline-none focus:text-purple-500 dark:text-purple-200 dark:hover:text-purple-500 dark:focus:text-purple-500" href='/shop-listings'>View Catalogue</Link>
               <ThemeSwitch />
               <SideCart />
             

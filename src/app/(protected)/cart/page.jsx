@@ -4,20 +4,31 @@ import { useEffect, useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import StripeCheckoutForm from './components/StripeCheckoutForm';
-import Link from 'next/link';
 import OrderSummaryField from './components/OrderSummaryField';
 import CartItem from './components/CartItem';
+import ShippingDropdown from './components/ShippingDropdown';
+import { useRouter } from "next/navigation";
+import PaymentConfirmModal from './components/PaymentConfirmModal';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 export default function CartPage() {
-  const { cart, removeFromCart, getTotalPrice } = useCart();
-  const [user, setUser] = useState(null);
-  const [clientSecret, setClientSecret] = useState('');
+  const { cart, removeFromCart, totalPrice } = useCart();
   const [checkout, setCheckout] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState('Canada');
-  const [shippingPrice, setShippingPrice] = useState(15);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [shippingPrice, setShippingPrice] = useState(null);
+
+  
+  const totalTax = parseFloat((totalPrice * 0.13).toFixed(2));
+  const totalCheckoutAmount = shippingPrice + totalTax + totalPrice
+
+  const router = useRouter();
+
+  // Calculate shipping price based on selected country
+  const shippingPrices = {
+    'CA': 15,
+    'US': 20,
+    'GB': 25,
+  };
 
   // User initialization from localStorage
   useEffect(() => {
@@ -28,21 +39,22 @@ export default function CartPage() {
   }, []);
 
   // Update shipping price based on country
-  useEffect(() => {
-    const shippingPrices = {
-      Canada: 15,
-      'United States': 20,
-      'United Kingdom': 25,
-    };
-    setShippingPrice(shippingPrices[selectedCountry] || 15);
-  }, [selectedCountry]);
+  const handleCountryChange = (country) => {
+    setSelectedCountry(country);
+    // Set the shipping price based on the selected country
+    if (country) {
+      setShippingPrice(shippingPrices[country]);
+    } else {
+      setShippingPrice(null); // Reset shipping price if no country is selected
+    }
+  };
 
   // Create payment intent when checkout is triggered
   useEffect(() => {
     if (!checkout) return;
 
     const fetchPaymentIntent = async () => {
-      const totalAmount = getTotalPrice() + shippingPrice;
+      const totalAmount = totalCheckoutAmount;
 
       const response = await fetch('/api/payment-intent', {
         method: 'POST',
@@ -55,10 +67,8 @@ export default function CartPage() {
     };
 
     fetchPaymentIntent();
-  }, [checkout, getTotalPrice, shippingPrice]);
+  }, [checkout, totalCheckoutAmount]);
 
-  const totalProducts = getTotalPrice();
-  const totalPrice = totalProducts + shippingPrice;
 
   const handleCloseCheckout = () => setCheckout(false);
 
@@ -68,7 +78,7 @@ export default function CartPage() {
         <div className='w-3/4 py-4 px-2 mx-2 mt-4'>
           <h1 className="text-xl font-semibold mb-6">Shopping Cart</h1>
           {cart.map((item, index) => (
-            <CartItem item={item} key={index} remove={removeFromCart}/>
+            <CartItem item={item} key={index} remove={removeFromCart} />
           ))}
 
           {cart.length > 0 ? (
@@ -81,17 +91,33 @@ export default function CartPage() {
         <div className='w-1/4 py-4 px-2 mx-2 mt-4'>
           <h1 className='text-lg font-semibold mb-1'>Order Summary</h1>
           <OrderSummaryField fieldName={'Subtotal'} fieldValue={`$${totalPrice}`} />
-          <OrderSummaryField fieldName={'Shipping'} fieldValue={'$15'} />
-          <OrderSummaryField fieldName={'Estimated Tax'} fieldValue={'$229'} />
-          <button
-              onClick={() => setCheckout(true)}
-              className="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white py-3 rounded-lg font-semibold shadow-sm transition duration-200"
-            >
-              Proceed to Checkout
-            </button>
+          <div className='flex items-center justify-between pt-4'>
+            <div>
+              <p className='text-sm font-medium'>Shipping</p>
+              
+            </div>
+            {selectedCountry != null ? (<p className='text-sm font-medium'>{`$${shippingPrice}`}</p>) : (<ShippingDropdown onCountryChange={handleCountryChange} />)}
+          </div>
+          {selectedCountry !== null && (
+                <p
+                  onClick={() => setSelectedCountry(null)}
+                  className="text-neutral-400 dark:text-neutral-400 pb-2 underline cursor-pointer text-xs hover:text-purple-500 transition duration-150"
+                >
+                  Clear
+                </p>
+              )}
+          <OrderSummaryField fieldName={'Estimated Tax'} fieldValue={`$${totalTax}`} />
+          <div className='flex items-center justify-between pt-4'>
+                <div>
+                    <p className='text-sm font-medium'>Total</p>
+                </div>
+                <p className='text-sm font-medium'>{`$${totalCheckoutAmount}`}</p>
+            </div>
+          <PaymentConfirmModal orderAmount={totalCheckoutAmount} />
 
         </div>
       </div>
+
     </div>
   );
 }

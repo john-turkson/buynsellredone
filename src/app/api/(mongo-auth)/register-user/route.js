@@ -57,7 +57,7 @@ export async function POST(req) {
     await newUser.save();
 
     return new Response(
-      JSON.stringify({ message: "User created successfully" }),
+      JSON.stringify({ message: "User created successfully", newUserId: newUser._id}),
       { status: 201, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {

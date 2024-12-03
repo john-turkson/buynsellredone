@@ -1,54 +1,88 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
 import FormField from "../../../../components/application/FormField";
 import FileInput from "./FileInput";
 import { useFormik } from "formik";
 import axios from "axios";
 import { registrationScehma } from "@/utils/yup-schemas";
-import SuccessAlert from "@/components/application/SuccessAlert";
 import { uploadProfilePictureToCloudinary } from "@/utils/auth-functions";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
-  const [alertVisible, setAlertVisible] = useState(false);
+
+  const router = useRouter();
 
   const onSubmit = async (values, actions) => {
     // console.log("Form Submitted", values);
 
-    const imageResponse = await uploadProfilePictureToCloudinary(
-      values.profilePicture,
-      values.username
-    );
-    console.log(imageResponse);
+    if (values.profilePicture === '') {
 
-    const profileData = {
-      username: values.username,
-      email: values.email,
-      password: values.password,
-      phone: values.phoneNumber,
-      profilePicture: imageResponse,
-    };
+      const profileData = {
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        phone: values.phoneNumber,
+        profilePicture: values.profilePicture,
+      };
 
-    //Send User Data to MongoDB
-    try {
-      const response = await axios.post(
-        ".netlify/functions/register-user",
-        profileData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const saveUserResponse = await axios.post("/api/register-user", profileData, {
+        headers: { "Content-Type": "application/json" },
+      });
 
-      if (response.status === 201) {
-        setAlertVisible(true);
-        actions.resetForm();
+      if (saveUserResponse.status === 201) {
+        router.push("/sign-in");
+        // actions.resetForm();
       }
-    } catch (error) {
-      console.error("Error creating user:", error.message);
+
+    } else {
+      try {
+
+        // Step 1: Save user info (excluding profile picture) to MongoDB
+        const { username, email, password, phoneNumber: phone } = values;
+        const userProfile = { username, email, password, phone };
+
+        const saveUserResponse = await axios.post("/api/register-user", userProfile, {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (saveUserResponse.status === 201) {
+          const newUserId = saveUserResponse.data.newUserId; // Assuming the API returns `userId`
+          console.log(newUserId);
+
+
+          // Step 2: Upload the profile picture
+          const imageResponse = await uploadProfilePictureToCloudinary(
+            values.profilePicture,
+            newUserId
+          );
+
+          console.log(imageResponse);
+
+          const updatedInfo = { newUserId, profilePicture: imageResponse }
+
+          // Step 3: Update the profile's `profilePicture` property
+          const updatedUserResponse = await axios.post("/api/update-profile-picture", updatedInfo, {
+            headers: { "Content-Type": "application/json" },
+          });
+
+          if (updatedUserResponse.status === 200) {
+            // Step 4: Redirect to sign-in after all steps succeed
+            router.push("/sign-in");
+            actions.resetForm();
+          } else {
+            console.error("Failed to update profile picture URL.");
+          }
+        } else {
+          console.error("Failed to save user profile.");
+        }
+      } catch (error) {
+        console.error("Error during submission:", error.message);
+      }
+
     }
+
+
   };
 
   const formik = useFormik({
@@ -110,7 +144,7 @@ export default function RegisterForm() {
                     validationMessage={
                       formik.errors.password
                         ? formik.errors.password.charAt(0).toUpperCase() +
-                          formik.errors.password.slice(1)
+                        formik.errors.password.slice(1)
                         : ""
                     }
                   />
@@ -209,11 +243,6 @@ export default function RegisterForm() {
           </div>
         </div>
       </div>
-
-      <SuccessAlert
-        message="Account created successfully!"
-        hidden={!alertVisible}
-      />
     </>
   );
 }
