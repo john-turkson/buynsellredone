@@ -5,7 +5,14 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
 	try {
 		// Parse the query string
-		const { buyer, listings, totalAmount, orderDate, status, paymentMethod, shippingAddress } = await req.json();
+		const { buyer, listings, paymentMethod, shippingAddress } = await req.json();
+
+		// Ensure all required fields are present
+		if (!buyer || !listings || !paymentMethod || !shippingAddress) {
+			return NextResponse.json({ message: "All fields are required" }, { status: 400, headers: { "Access-Control-Allow-Origin": "*" } });
+		}
+
+		// TODO: totalAmount, orderDate, status to be made serverside
 
 		// Initiate MongoDB Connection
 		if (!mongoose.connection.readyState) {
