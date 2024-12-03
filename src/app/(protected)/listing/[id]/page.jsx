@@ -47,7 +47,7 @@ export default async function ListingPage({ params }) {
                     <h1 className='text-2xl font-bold mb-4'>{listing.name}</h1>
                     <span className="text-xl font-bold dark:text-neutral-400">${listing.price}</span>
                     <p className="text-gray-800 dark:text-gray-300 mt-6">{listing.description}</p>
-                    {!isOwner ? (<AddCart lisitng={listing} />) : (<button className="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white py-3 rounded-lg font-semibold shadow-sm transition duration-200 >Edit Button</button>)">Edit Button</button>)}
+                    {!isOwner ? (<AddCart lisitng={listing} />) : (<button className="w-full mt-6 bg-purple-600 hover:bg-purple-500 text-white py-3 rounded-lg font-semibold shadow-sm transition duration-200 >Edit Button</button>)">Edit Listing</button>)}
                 </div>
             </div>
         </div>

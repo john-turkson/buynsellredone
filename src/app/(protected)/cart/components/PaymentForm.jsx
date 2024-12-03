@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react"
 import { useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useToast } from "@/context/ToastContext";
+import { useCart } from "@/context/CartContext";
 
 export default function PaymentForm({ clientSecret, closeModal }) {
 
@@ -28,6 +29,7 @@ export default function PaymentForm({ clientSecret, closeModal }) {
     const [isProcessing, setIsProcessing] = useState(false);
 
     const { addToast } = useToast();
+    const { clearCart } = useCart();
 
     const handleCardChange = (event) => {
         setCardError(event.error ? event.error.message : '');
@@ -76,6 +78,7 @@ export default function PaymentForm({ clientSecret, closeModal }) {
             setErrorMessage(error.message);
             setIsProcessing(false);
         } else {
+            clearCart(); 
             closeModal();
             console.log('Payment successful:', paymentIntent);
             setIsProcessing(false);

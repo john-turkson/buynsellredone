@@ -70,6 +70,12 @@ export const CartProvider = ({ children }) => {
       return prevCart.filter((item) => item._id !== id);
     });
   };
+
+  const clearCart = () => {
+    setCart([]);
+    setTotalPrice(0);
+    setOrderCost(0);
+  };
   
   return (
     <CartContext.Provider
@@ -80,6 +86,7 @@ export const CartProvider = ({ children }) => {
         setOrderCost,
         addToCart,
         removeFromCart,
+        clearCart
       }}
     >
       {children}
