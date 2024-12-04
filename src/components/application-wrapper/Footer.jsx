@@ -13,7 +13,7 @@ export default function Footer() {
             <ThemeSwitch />
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            &copy; 2024 BuynSell. All rights reserved.
+            &copy; 2024 Exchangr. All rights reserved.
           </p>
         </div>
       </footer>

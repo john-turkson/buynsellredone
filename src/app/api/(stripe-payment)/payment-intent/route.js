@@ -6,13 +6,19 @@ const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
 
 export async function POST(req) {
   // Parse the amount from the request body
-  const { amount } = await req.json();
+  const { amount, user } = await req.json();
 
   try {
+      const customer = await stripe.customers.create({
+        email: user,
+        name: user
+    });
+
     // Create a PaymentIntent with the specified amount and currency
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
-      currency: 'cad', // Or whichever currency you're using
+      currency: 'cad',
+      customer: customer.id,
       automatic_payment_methods: {
         enabled: true,
       },

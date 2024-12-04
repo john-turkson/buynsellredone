@@ -17,7 +17,7 @@ export default function Navbar() {
             className="flex-none font-semibold text-xl text-black focus:outline-none focus:opacity-80 dark:text-white"
             href="/"
           >
-            BuynSell
+            <img src="https://res.cloudinary.com/ddznwdhef/image/upload/t_ProfilePicture/v1733281014/capstone_log_transparent_ku0xbg.png" alt="BuynSell" className="h-9 w-auto" />
           </Link>
 
           <div className="md:hidden">

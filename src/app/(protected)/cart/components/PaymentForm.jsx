@@ -8,8 +8,6 @@ import { useCart } from "@/context/CartContext";
 
 export default function PaymentForm({ clientSecret, closeModal }) {
 
-    
-
     const stripe = useStripe();
     const elements = useElements();
     const { data: session } = useSession()
@@ -29,8 +27,7 @@ export default function PaymentForm({ clientSecret, closeModal }) {
     const [isProcessing, setIsProcessing] = useState(false);
 
     const { addToast } = useToast();
-    const { clearCart } = useCart();
-
+    const { cart, totalOrderCost, clearCart } = useCart();
     const handleCardChange = (event) => {
         setCardError(event.error ? event.error.message : '');
     };
@@ -78,11 +75,26 @@ export default function PaymentForm({ clientSecret, closeModal }) {
             setErrorMessage(error.message);
             setIsProcessing(false);
         } else {
-            clearCart(); 
+            const orderData = {
+                buyer: session?.user?.userId,
+                listings: cart.map(item => item._id),
+                totalAmount: paymentIntent.amount / 100,
+                paymentMethod: 'Visa',
+                shippingAddress: `${formData.address}, ${formData.city}, ${formData.state}, ${formData.postalCode}, ${formData.country}`,
+                };
+        
+                await fetch('/api/create-orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData),
+            });
+
+            console.log('Order created successfully');
+            clearCart();
             closeModal();
-            console.log('Payment successful:', paymentIntent);
-            setIsProcessing(false);
-            addToast('Order Made Successfully', 'success')
+            addToast('Order Made Successfully', 'success');
         }
     }
 

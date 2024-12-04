@@ -65,7 +65,6 @@ export default async function MyOrders() {
 				<div className="text-left">{orders[i].orderDate.substr(0, 10)}</div>
 				{listingCards}
 				<div className="font-bold text-left">Total: ${orders[i].totalAmount}</div>
-				<div className="text-left">Status: {orders[i].status}</div>
 			</div>
 		);
 	}
