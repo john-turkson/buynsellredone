@@ -15,6 +15,7 @@ export async function POST(req) {
     });
 
     // Create a PaymentIntent with the specified amount and currency
+    // stripe.customers.retrievePaymentMethod
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: 'cad',
@@ -25,7 +26,7 @@ export async function POST(req) {
     });
 
     // Respond with the client secret of the created payment intent
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+    return NextResponse.json({ clientSecret: paymentIntent.client_secret, intent: paymentIntent });
   } catch (error) {
     console.error('Error creating payment intent:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

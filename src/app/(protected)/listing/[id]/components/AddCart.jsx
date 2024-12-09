@@ -2,14 +2,14 @@
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 
-export default function AddCart({ lisitng }) {
+export default function AddCart({ listing }) {
 
     const { addToast } = useToast();
     const { addToCart } = useCart();
 
     const handleAddToCart = () => {
-        addToCart(lisitng);
-        addToast(`${lisitng.name} has been added to your cart.`, 'info');
+        addToCart(listing);
+        addToast(`${listing.name} has been added to your cart.`, 'info');
       };
 
     return (

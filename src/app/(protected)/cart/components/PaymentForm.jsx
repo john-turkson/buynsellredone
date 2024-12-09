@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useToast } from "@/context/ToastContext";
 import { useCart } from "@/context/CartContext";
+import { getPaymentMethod } from "@/utils/helper-functions";
 
 export default function PaymentForm({ clientSecret, closeModal }) {
 
@@ -75,26 +76,42 @@ export default function PaymentForm({ clientSecret, closeModal }) {
             setErrorMessage(error.message);
             setIsProcessing(false);
         } else {
+            const payMeth = await getPaymentMethod(paymentIntent.id);
             const orderData = {
                 buyer: session?.user?.userId,
                 listings: cart.map(item => item._id),
                 totalAmount: paymentIntent.amount / 100,
-                paymentMethod: 'Visa',
+                paymentMethod: payMeth,
                 shippingAddress: `${formData.address}, ${formData.city}, ${formData.state}, ${formData.postalCode}, ${formData.country}`,
-                };
-        
-                await fetch('/api/create-orders', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(orderData),
-            });
+            };
 
-            console.log('Order created successfully');
-            clearCart();
-            closeModal();
-            addToast('Order Made Successfully', 'success');
+            try {
+                const response = await fetch('/api/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData), // Ensure the body is a JSON string
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Error creating order:", errorData);
+                    return
+                    // Display an error message to the user if needed
+                } else {
+                    const result = await response.json();
+                    console.log("Order created successfully:", result);
+                    clearCart();
+                    closeModal();
+                    addToast('Order Made Successfully', 'success');
+                    // Handle success (e.g., redirect to a success page or clear the cart)
+                }
+            } catch (error) {
+                console.error("Network or server error:", error);
+                // Handle network/server errors (e.g., show a notification)
+            }
+
         }
     }
 

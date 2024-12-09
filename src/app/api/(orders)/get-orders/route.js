@@ -23,7 +23,7 @@ export async function GET(req) {
 		await connectToDB();
 
 		const orders = await Order.find({ buyer: userId }).sort({ orderDate: "desc" });
-		console.log(orders);
+		// console.log(orders);
 
 		if (orders == null) {
 			return NextResponse.json({ message: "No orders found" }, { status: 404 });

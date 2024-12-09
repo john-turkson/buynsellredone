@@ -60,7 +60,7 @@ export default async function MyListings() {
         ) : (
           <p>No listings available</p>
         )}
-        
+      
       </div>
     </div>
   );
