@@ -114,7 +114,6 @@ export default function CartPage() {
                 <p className='text-sm font-medium'>{`$${totalCheckoutAmount}`}</p>
             </div>
           <PaymentConfirmModal orderAmount={totalCheckoutAmount} />
-
         </div>
       </div>
 

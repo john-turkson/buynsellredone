@@ -43,6 +43,14 @@ export async function POST(req) {
       );
     }
 
+    const listingExists = await Listing.findOne({ $or: [{ name }] });
+    if (listingExists) {
+      return new Response(
+        JSON.stringify({ message: "Listing Name already exists" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     // Create the new listing in the database
     const newListing = new Listing({
       name,
@@ -55,8 +63,6 @@ export async function POST(req) {
 
     await newListing.save(); // Save the listing in MongoDB
 
-    // Update the user's listings array
-    existingUser.listings.push(newListing._id);
     await existingUser.save(); // Save the updated user document
 
     // Construct response

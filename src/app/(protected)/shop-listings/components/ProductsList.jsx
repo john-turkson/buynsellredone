@@ -33,7 +33,7 @@ export default function ProductsList({ products, userId, usersMap }) {
     return (
         <div className="max-w-[85rem] mx-auto px-4">
             <div className="flex items-center justify-between">
-                <h1 className="text-xl font-semibold mb-6 pt-6">BuynSell Catalogue</h1>
+                <h1 className="text-xl font-semibold mb-6 pt-6">Exchangr Catalogue</h1>
                 <ItemToggle onToggleChange={handleToggleChange} />
             </div>
             <div className="flex flex-wrap justify-between gap-4 pt-6 pb-12">

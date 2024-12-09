@@ -6,7 +6,7 @@ import FileInput from "./FileInput";
 import { useFormik } from "formik";
 import axios from "axios";
 import { registrationScehma } from "@/utils/yup-schemas";
-import { uploadProfilePictureToCloudinary } from "@/utils/auth-functions";
+import { uploadProfilePictureToCloudinary } from "@/utils/helper-functions";
 import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
