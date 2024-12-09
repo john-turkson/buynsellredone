@@ -5,72 +5,77 @@ import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
 const connectToDB = async () => {
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(process.env.MONGODB_URI, { dbName: "Main" });
-  }
+	if (mongoose.connection.readyState === 0) {
+		await mongoose.connect(process.env.MONGODB_URI, { dbName: "Main" });
+	}
 };
 
 const validateRequestBody = (body) => {
-  const requiredFields = ["buyer", "listings", "totalAmount", "paymentMethod", "shippingAddress"];
-  const missingFields = requiredFields.filter(field => !body[field]);
+	const requiredFields = ["buyer", "listings", "totalAmount", "paymentMethod", "shippingAddress"];
+	const missingFields = requiredFields.filter((field) => !body[field]);
 
-  if (missingFields.length > 0) {
-    return `Missing required fields: ${missingFields.join(", ")}`;
-  }
+	if (missingFields.length > 0) {
+		return `Missing required fields: ${missingFields.join(", ")}`;
+	}
 
-  if (!mongoose.Types.ObjectId.isValid(body.buyer)) {
-    return "Invalid buyer ID";
-  }
+	if (!mongoose.Types.ObjectId.isValid(body.buyer)) {
+		return "Invalid buyer ID";
+	}
 
-  return null;
+	return null;
 };
 
 export async function POST(req) {
-  try {
-    const body = await req.json();
-    console.log('Received order data:', body);
+	try {
+		const body = await req.json();
+		console.log("Received order data:", body);
 
-    // Validate request body
-    const validationError = validateRequestBody(body);
-    if (validationError) {
-      return NextResponse.json({ message: validationError }, { status: 400 });
-    }
+		// Validate request body
+		const validationError = validateRequestBody(body);
+		if (validationError) {
+			return NextResponse.json({ message: validationError }, { status: 400 });
+		}
 
-    const { buyer, listings, totalAmount, paymentMethod, shippingAddress } = body;
+		const { buyer, listings, totalAmount, paymentMethod, shippingAddress } = body;
 
-    await connectToDB();
+		await connectToDB();
 
-    // Validate buyer existence
-    const user = await User.findById(buyer);
-    if (!user) {
-      return NextResponse.json({ message: "Buyer does not exist!" }, { status: 400 });
-    }
+		// Validate buyer existence
+		const user = await User.findById(buyer);
+		if (!user) {
+			return NextResponse.json({ message: "Buyer does not exist!" }, { status: 400 });
+		}
 
-    // Validate listings
-    console.log(listings);
+		// Validate listings
+		console.log(listings);
 
+		// Create and save the new order
+		const newOrder = await Order.create({
+			buyer: buyer,
+			listings: listings,
+			totalAmount,
+			paymentMethod,
+			shippingAddress,
+			orderDate: Date.now(),
+		});
 
-    // Create and save the new order
-    const newOrder = await Order.create({
-      buyer: buyer,
-      listings: listings,
-      totalAmount,
-      paymentMethod,
-      shippingAddress,
-    });
+		console.log("Order saved:", newOrder);
 
-    console.log('Order saved:', newOrder);
-
-    return NextResponse.json({
-      message: "Order created successfully",
-      order: newOrder,
-    }, { status: 201 });
-
-  } catch (error) {
-    console.error("Order creation error:", error);
-    return NextResponse.json({
-      message: "Internal server error",
-      error: error.message,
-    }, { status: 500 });
-  }
+		return NextResponse.json(
+			{
+				message: "Order created successfully",
+				order: newOrder,
+			},
+			{ status: 201 }
+		);
+	} catch (error) {
+		console.error("Order creation error:", error);
+		return NextResponse.json(
+			{
+				message: "Internal server error",
+				error: error.message,
+			},
+			{ status: 500 }
+		);
+	}
 }
