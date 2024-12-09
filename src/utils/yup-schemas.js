@@ -94,3 +94,12 @@ export const addNewListingSchema = Yup.object({
         .min(1, 'At least one image is required') // Ensures the array has at least one item
         .required('Listing Image(s) is required'), // Ensures the array itself is provided
 });
+
+export const editListingSchema = Yup.object({
+  name: Yup.string(),
+  description: Yup.string(),
+  price: Yup.number(),
+  images: Yup.array()
+        .min(1, 'At least one image is required') // Ensures the array has at least one item
+        .required('Listing Image(s) is required'), // Ensures the array itself is provided
+});

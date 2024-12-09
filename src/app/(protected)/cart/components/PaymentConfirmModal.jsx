@@ -14,8 +14,7 @@ const fetchPaymentIntent = async (orderAmount, setClientSecret) => {
         body: JSON.stringify({ amount: totalAmount * 100 }), // Stripe expects cents
     });
 
-    const data = await response.json();
-    console.log(data.clientSecret);  // For debugging
+    const data = await response.json();  // For debugging
     setClientSecret(data.clientSecret); // Store the client secret in the state
 };
 

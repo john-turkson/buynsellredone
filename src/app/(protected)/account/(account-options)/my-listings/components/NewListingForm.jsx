@@ -28,7 +28,7 @@ export default function NewListingForm({ id }) {
 			const imageFormData = new FormData();
 			imageFormData.append("file", image);
 			imageFormData.append("upload_preset", process.env.NEXT_PUBLIC_LISTING_UPLOAD_PRESET); // replace with your Cloudinary unsigned preset
-			imageFormData.append("folder", `Users/${session.user.userId}/Listing-Images`); // replace with the desired Cloudinary directory
+			imageFormData.append("folder", `Users/${session.user.userId}`); // replace with the desired Cloudinary directory
 			imageFormData.append("public_id", `listing_${image.name}`); // use custom name or default to image name
 
 			// Upload the image to Cloudinary and get the secure URL

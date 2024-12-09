@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { loginUser } from "@/utils/auth-functions";
+import { loginUser } from "@/utils/helper-functions";
 
 export const authConfig = {
   pages: {
