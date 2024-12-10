@@ -83,7 +83,7 @@ export default async function MyOrders() {
 			  <OrderCard key={index} order={order} />
 			))
 		  ) : (
-			<p>No listings available</p>
+			<p>No orders available</p>
 		  )}
 		</div>
 	  </div>
